@@ -1,0 +1,46 @@
+# Entorno virtual
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Archivos de entorno
+.env
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Modelos entrenados
+*.pkl
+*.joblib
+
+# Logs
+*.log
+
+# Archivos temporales
+tmp/
+temp/
+
+# Datos grandes o sensibles
+data/01_raw/*
+data/06_models/*
+data/07_model_output/*
+
+# Mantener estructura de carpetas
+!data/01_raw/.gitkeep
+!data/06_models/.gitkeep
+!data/07_model_output/.gitkeep
