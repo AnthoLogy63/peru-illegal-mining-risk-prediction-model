@@ -27,6 +27,7 @@ Thumbs.db
 # Modelos entrenados
 *.pkl
 *.joblib
+*.pt
 
 # Logs
 *.log

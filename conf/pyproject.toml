@@ -10,4 +10,10 @@ dependencies = [
     "matplotlib",
     "jupyter",
     "geopandas",
+    "torch",
+    "torchvision",
+    "timm",
+    "scikit-learn",
+    "pillow",
+    "tqdm",
 ]
