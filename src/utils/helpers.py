@@ -16,5 +16,13 @@ def set_seed(seed: int = 42) -> None:
         torch.cuda.manual_seed_all(seed)
 
 
-def get_device() -> torch.device:
-    return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+def get_device():
+    if torch.cuda.is_available():
+        return torch.device("cuda")
+    try:
+        import torch_directml
+        if torch_directml.is_available():
+            return torch_directml.device()
+    except ImportError:
+        pass
+    return torch.device("cpu")

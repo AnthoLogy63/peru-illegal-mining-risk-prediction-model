@@ -99,7 +99,7 @@ def train_model(
 
     model = create_model(model_name, img_size=img_size).to(device)
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr, foreach=False)
 
     history: dict = {"train": [], "val": []}
     best_f1 = -1.0

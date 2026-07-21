@@ -93,7 +93,7 @@ def create_dataloaders(
     -------
     dict con claves 'train', 'val', 'test'
     """
-    chips_dir = data_dir / "01_raw" / "dataset_amazonia_garimpo_binario"
+    chips_dir = data_dir / "Dataset" / "datasets" / "amazonia_garimpo" / "dataset_amazonia_garimpo_binario"
     model_input = data_dir / "05_model_input"
 
     loaders: dict[str, DataLoader] = {}
@@ -110,7 +110,8 @@ def create_dataloaders(
             batch_size=batch_size,
             shuffle=(split == "train"),
             num_workers=num_workers,
-            pin_memory=torch.cuda.is_available(),
+            pin_memory=True,
+            persistent_workers=(num_workers > 0),
         )
 
     return loaders
