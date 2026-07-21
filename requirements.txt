@@ -1,0 +1,18 @@
+# Dependencias del proyecto — instalar con:
+#   pip install -r requirements.txt
+#
+# PyTorch con GPU (Windows/CUDA): ver https://pytorch.org/get-started/locally/
+
+pandas
+numpy
+matplotlib
+seaborn
+jupyter
+opencv-python-headless
+geopandas
+torch
+torchvision
+timm
+scikit-learn
+pillow
+tqdm
