@@ -1,0 +1,4 @@
+split,n_chips,n_rasters,com_garimpo_%,sem_garimpo_%
+train,81938,8,56.1,43.9
+val,14840,2,45.3,54.7
+test,14806,2,19.1,80.9
