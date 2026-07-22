@@ -40,6 +40,7 @@ temp/
 data/01_raw/*
 data/06_models/*
 data/07_model_output/*
+data/Dataset/*
 
 # Mantener estructura de carpetas
 !data/01_raw/.gitkeep

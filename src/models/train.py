@@ -45,9 +45,11 @@ def _run_epoch(
     criterion: nn.Module,
     device: torch.device,
     optimizer: torch.optim.Optimizer | None = None,
+    scaler: torch.cuda.amp.GradScaler | None = None,
 ) -> tuple[float, dict]:
     is_train = optimizer is not None
     model.train() if is_train else model.eval()
+    use_amp = scaler is not None and device.type == "cuda"
 
     total_loss = 0.0
     all_preds: list[int] = []
@@ -56,16 +58,24 @@ def _run_epoch(
     context = torch.enable_grad() if is_train else torch.no_grad()
     with context:
         for images, labels in tqdm(loader, leave=False, desc="train" if is_train else "eval"):
-            images = images.to(device)
-            labels = labels.to(device)
-
-            outputs = model(images)
-            loss = criterion(outputs, labels)
+            images = images.to(device, non_blocking=True)
+            labels = labels.to(device, non_blocking=True)
 
             if is_train:
                 optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
+
+            with torch.autocast(device_type="cuda", dtype=torch.float16, enabled=use_amp):
+                outputs = model(images)
+                loss = criterion(outputs, labels)
+
+            if is_train:
+                if use_amp:
+                    scaler.scale(loss).backward()
+                    scaler.step(optimizer)
+                    scaler.update()
+                else:
+                    loss.backward()
+                    optimizer.step()
 
             total_loss += loss.item() * labels.size(0)
             preds = outputs.argmax(dim=1)
@@ -97,9 +107,13 @@ def train_model(
     save_dir = Path(save_dir)
     save_dir.mkdir(parents=True, exist_ok=True)
 
+    if device.type == "cuda":
+        torch.backends.cudnn.benchmark = True
+
     model = create_model(model_name, img_size=img_size).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=lr, foreach=False)
+    scaler = torch.cuda.amp.GradScaler() if device.type == "cuda" else None
 
     history: dict = {"train": [], "val": []}
     best_f1 = -1.0
@@ -109,15 +123,15 @@ def train_model(
     ckpt_path = save_dir / f"{model_name}_best.pt"
     history_path = save_dir / f"{model_name}_history.json"
 
-    print(f"Entrenando {model_name} en {device}")
+    print(f"Entrenando {model_name} en {device}" + (" (AMP activado)" if scaler is not None else ""))
     print(f"Train: {len(train_loader.dataset):,} | Val: {len(val_loader.dataset):,}")
 
     for epoch in range(1, max_epochs + 1):
         t0 = time.time()
         train_loss, train_metrics = _run_epoch(
-            model, train_loader, criterion, device, optimizer
+            model, train_loader, criterion, device, optimizer, scaler
         )
-        val_loss, val_metrics = _run_epoch(model, val_loader, criterion, device)
+        val_loss, val_metrics = _run_epoch(model, val_loader, criterion, device, scaler=scaler)
 
         elapsed = time.time() - t0
         record = {
