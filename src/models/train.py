@@ -97,12 +97,15 @@ def train_model(
     patience: int = 4,
     lr: float = 1e-4,
     img_size: int = IMAGE_SIZE,
+    pretrained: bool = True,
 ) -> dict:
     """
     Entrena un modelo con early stopping sobre val macro F1.
 
     Guarda el mejor checkpoint en save_dir/{model_name}_best.pt
     y el historial en save_dir/{model_name}_history.json
+
+    ``pretrained=False`` entrena desde pesos aleatorios (sin ImageNet).
     """
     save_dir = Path(save_dir)
     save_dir.mkdir(parents=True, exist_ok=True)
@@ -110,7 +113,7 @@ def train_model(
     if device.type == "cuda":
         torch.backends.cudnn.benchmark = True
 
-    model = create_model(model_name, img_size=img_size).to(device)
+    model = create_model(model_name, img_size=img_size, pretrained=pretrained).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=lr, foreach=False)
     scaler = torch.cuda.amp.GradScaler() if device.type == "cuda" else None
