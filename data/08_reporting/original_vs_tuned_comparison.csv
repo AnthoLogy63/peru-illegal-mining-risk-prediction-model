@@ -1,0 +1,5 @@
+timm_name,val_macro_f1_original,val_accuracy_original,val_macro_f1_tuned,val_accuracy_tuned,f1_gain_tuned_minus_original
+efficientnet_b0,0.7489,0.7491,0.7566,0.7609,0.0077
+resnet50,0.7619,0.7627,0.767,0.7693,0.0051
+swin_tiny_patch4_window7_224,0.7456,0.7456,0.7536,0.7547,0.008
+vit_tiny_patch16_224,0.7231,0.728,0.7529,0.7606,0.0298
