@@ -1,0 +1,13 @@
+model,variant,checkpoint,train_best_epoch,test_accuracy,test_macro_f1,test_f1_com_garimpo,test_f1_sem_garimpo,test_recall_com_garimpo,test_precision_com_garimpo
+vit_tiny_patch16_224,tuned,vit_tiny_patch16_224_best.pt,5,0.873,0.808,0.6964,0.9197,0.7614,0.6416
+resnet50,scratch,resnet50_best.pt,18,0.8777,0.8076,0.6915,0.9237,0.7166,0.6682
+efficientnet_b0,scratch,efficientnet_b0_best.pt,41,0.8701,0.8037,0.6895,0.9179,0.7536,0.6354
+vit_tiny_patch16_224,original,vit_tiny_patch16_224_best.pt,1,0.8657,0.8002,0.6858,0.9146,0.766,0.6209
+swin_tiny_patch4_window7_224,tuned,swin_tiny_patch4_window7_224_best.pt,2,0.8484,0.7879,0.6746,0.9012,0.8214,0.5723
+resnet50,original,resnet50_best.pt,9,0.8416,0.7765,0.6559,0.8971,0.7889,0.5613
+efficientnet_b0,original,efficientnet_b0_best.pt,8,0.8385,0.7748,0.6551,0.8946,0.8016,0.5539
+efficientnet_b0,tuned,efficientnet_b0_best.pt,3,0.8359,0.7736,0.6548,0.8923,0.8136,0.5479
+swin_tiny_patch4_window7_224,original,swin_tiny_patch4_window7_224_best.pt,7,0.8278,0.7678,0.6497,0.8858,0.8348,0.5318
+resnet50,tuned,resnet50_best.pt,21,0.8292,0.7641,0.6401,0.888,0.7939,0.5362
+vit_tiny_patch16_224,scratch,vit_tiny_patch16_224_best.pt,8,0.7903,0.7194,0.5783,0.8604,0.7515,0.47
+swin_tiny_patch4_window7_224,scratch,swin_tiny_patch4_window7_224_best.pt,1,0.1913,0.1606,0.3212,0.0,1.0,0.1913
