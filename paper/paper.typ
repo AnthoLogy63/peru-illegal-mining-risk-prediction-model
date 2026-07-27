@@ -155,175 +155,175 @@ En síntesis, la revisión sistemática de los doce trabajos precedentes revela 
 // SECCIÓN 3: MATERIALES Y MÉTODOS
 // ============================================================
 
-= 3. Materiales y Métodos
+= 3. MATERIALES Y MÉTODOS
 
-== 3.1 Fundamentos Teóricos
+== _3.1. Fundamentos Teóricos_
 
-La minería ilegal aluvial, coloquialmente denominada *garimpo*, altera de forma drástica e irreversible la firma espectral del bosque tropical amazónico. El proceso extractivo involucra la deforestación de la cobertura vegetal, la remoción del suelo superficial y la creación artificial de pozas de sedimentación altamente reflectantes. Estas cicatrices antrópicas exhiben firmas ópticas distintivas en los satélites multiespectrales, diferenciándose claramente de los cuerpos de agua naturales y la vegetación circundante. La teledetección óptica permite capturar esta alteración a través de los canales espectrales visibles e infrarrojos @loboMappingMiningAreas2018 @TwentyYearsLand2020. 
+La minería ilegal aluvial, denominada coloquialmente como *garimpo*, altera de forma drástica e irreversible la estructura ecológica del bosque tropical amazónico @loboMappingMiningAreas2018. El método de extracción mecánica implica la deforestación total de la cobertura vegetal primigenia, la remoción intensiva del suelo superficial y la creación artificial de pozas de sedimentación de relaves. Estas operaciones vierten metales pesados altamente tóxicos, especialmente mercurio elemental, directamente en las cuencas hidrográficas adyacentes @pestanaLetsTalkMercury2022. La degradación química del agua destruye la biodiversidad acuática y compromete de manera crítica los medios de subsistencia y la salud pública de las comunidades ribereñas @crespo-lopezMercuryAmazonDanger2023.
 
-Las Redes Neuronales Convolucionales (CNN) representan el estándar de oro arquitectónico para la extracción automatizada de características espaciales en imágenes satelitales. A diferencia de los perceptrones multicapa clásicos, las CNN aplican operaciones de convolución matemática discreta para preservar la estructura jerárquica de los píxeles. La operación de convolución bidimensional sobre una imagen $I$ con un kernel $K$ de tamaño $m times n$ se define formalmente como $S(i,j) = (I * K)(i,j) = sum_m sum_n I(i-m, j-n) K(m,n)$. Este proceso extrae progresivamente bordes, texturas y formas complejas asociadas a las zonas mineras @LandUseLand2023 @adegunReviewDeepLearning2023.
+La remoción acelerada de la masa forestal y la acumulación de cuerpos de agua turbios modifican radicalmente la reflectancia electromagnética de la superficie terrestre. Esta transformación física genera firmas ópticas distintivas que los sensores multiespectrales satelitales capturan con alta resolución geométrica y radiométrica desde el espacio @TwentyYearsLand2020. La teledetección óptica permite monitorear perturbaciones severas del hábitat tropical en extensas áreas geográficas remotas y de difícil acceso terrestre @monacoImprovingWildfireSeverity2020. Por consiguiente, la observación satelital continua constituye el instrumento más viable para vigilar y cuantificar alteraciones ecológicas en la Amazonía @camalanChangeDetectionAmazonian2022c.
 
-Para introducir no linealidad en el modelo de regresión lineal subyacente, la arquitectura aplica la función de activación Unidad Lineal Rectificada (ReLU). La función ReLU se define matemáticamente como $f(x) = max(0, x)$, anulando los valores negativos del mapa de características. Esta operación acelera drásticamente la convergencia del descenso de gradiente estocástico al evitar cálculos exponenciales costosos. Asimismo, previene el fenómeno de saturación del gradiente presente en funciones sigmoidales tradicionales @kingmaAdamMethodStochastic2017 @heDeepResidualLearning2015.
+La interpretación visual e inspección manual de imágenes satelitales resulta inviable debido a la vasta extensión territorial y complejidad morfológica del ecosistema amazónico. Para automatizar este análisis a gran escala, la inteligencia artificial emplea el paradigma de Aprendizaje Supervisado dentro del campo de la Visión Computacional @silvaAutomatedDetectionAnalysis2023. Los modelos algorítmicos procesan matrices numéricas de píxeles previamente etiquetados para extraer e identificar patrones visuales altamente complejos que escapan al análisis ocular tradicional @nieThreedimensionalIntelligentMonitoring2024. Este enfoque computacional transforma masivos volúmenes de datos brutos en sistemas de alerta temprana de deforestación aluvial @sairerimachiDeteccionDeforestacionPor2024.
 
-El estrato de agrupamiento (*Pooling*) reduce sistemáticamente la dimensionalidad espacial de la representación. La operación de *Max Pooling* selecciona el valor máximo dentro de una ventana deslizante de tamaño $k times k$, operando independientemente en cada canal de profundidad. Esta técnica confiere invarianza traslacional al modelo, permitiendo que la red reconozca una poza de relaves sin importar su ubicación exacta en el parche de la imagen. Adicionalmente, el *Pooling* disminuye drásticamente el número de parámetros computacionales, mitigando el riesgo de sobreajuste durante el entrenamiento @ceciliLandCoverMapping2023 @heDeepLearningForest2023.
+Las Redes Neuronales Convolucionales (CNN) representan el estándar arquitectónico predominante para el procesamiento jerárquico y extracción automatizada de características espaciales en imágenes satelitales @LandUseLand2023. A diferencia de los perceptrones multicapa tradicionales, las CNN aplican operaciones matemáticas de convolución discreta sobre tensores bidimensionales para preservar la topología espacial de los parches satelitales @adegunReviewDeepLearning2023. La convolución bidimensional sobre una matriz de imagen $I$ con un kernel $K$ de tamaño $m times n$ se formaliza analíticamente como $S(i,j) = (I * K)(i,j) = sum_m sum_n I(i-m, j-n) K(m,n)$. Este filtrado espacial progresivo extrae bordes definidos, texturas de suelo removido y formas sinuosas asociadas a las excavaciones mineras @ceciliLandCoverMapping2023.
 
-La arquitectura VGG16 sentó las bases históricas de las redes convolucionales profundas secuenciales mediante el uso exclusivo de filtros pequeños de $3 times 3$. A pesar de su simplicidad conceptual, VGG16 sufre severamente del problema de desvanecimiento del gradiente al intentar aumentar su profundidad. Durante la fase de retropropagación (*backpropagation*), los gradientes disminuyen exponencialmente al multiplicarse por los pesos de las capas anteriores. Este defecto estructural impide que los modelos secuenciales puros alcancen altas exactitudes en clasificaciones complejas como las firmas espectrales del garimpo @cotolanApplicabilityPretrainedCNNs2024.
+El entrenamiento paramétrico de arquitecturas convolucionales profundas desde cero exige millones de imágenes satelitales etiquetadas y recursos computacionales inasumibles para las entidades gubernamentales locales @yosinskiHowTransferableAre2014. Para superar esta limitación estructural y optimizar la convergencia, la presente investigación implementa la técnica de Transferencia de Aprendizaje (*Transfer Learning*) @naushadDeepTransferLearning2021. El clasificador inicializa sus parámetros sinápticos con los pesos óptimos preentrenados sobre el repositorio masivo ImageNet, compuesto por más de un millón de imágenes visuales heterogéneas @tianRemoteSensingRetrieval2023a. El sistema solo ejecuta un reentrenamiento (*fine-tuning*) sobre las capas superiores densamente conectadas, ahorrando significativamente tiempo de GPU y costos algebraicos sin sacrificar capacidad discriminativa @tanEfficientNetRethinkingModel2020.
 
-Para solucionar la degradación del gradiente, este estudio adopta la arquitectura ResNet-50 como motor principal de extracción de características. ResNet-50 introduce el concepto revolucionario de los bloques residuales, empleando conexiones de salto (*skip connections*) que desvían la información alrededor de las capas convolucionales. El bloque residual se formaliza mediante la ecuación $y = cal(F)(x, {W_i}) + x$, donde $x$ es el vector de entrada y $cal(F)$ representa el mapeo residual. Esta topología garantiza un flujo de gradiente ininterrumpido hacia las capas iniciales, posibilitando el entrenamiento eficiente de 50 capas de profundidad @heDeepResidualLearning2015 @farahnakianMachineLearningAlgorithms2024.
-
-La limitación de datos satelitales etiquetados a gran escala se resuelve mediante la técnica de Transferencia de Aprendizaje (*Transfer Learning*). La red ResNet-50 se inicializa con los pesos sinápticos óptimos preentrenados sobre el masivo conjunto de datos ImageNet, compuesto por más de un millón de imágenes. Las primeras capas de la red ya poseen una sólida comprensión matemática de bordes, gradientes de color y texturas básicas. El modelo solo requiere un reentrenamiento (*fine-tuning*) de sus capas superiores densamente conectadas para adaptar esta visión general a las geometrías específicas de la deforestación minera amazónica @yosinskiHowTransferableAre2014 @naushadDeepTransferLearning2021.
-
-== 3.2 Herramientas y Tecnologías
-
-El desarrollo del pipeline de clasificación automatizada se implementó integralmente utilizando el lenguaje de programación Python en su versión 3.12. Python proporciona el ecosistema de computación científica más robusto para tareas de análisis de datos geoespaciales y aprendizaje automático a gran escala. La infraestructura de manejo de matrices multidimensionales y cálculos algebraicos de alto rendimiento fue operada a través de las librerías estándar NumPy y Pandas.
-
-Para la construcción, entrenamiento y evaluación del modelo de aprendizaje profundo, se utilizó la biblioteca de código abierto TensorFlow y su API de alto nivel Keras. TensorFlow permite la paralelización de operaciones tensoriales sobre Unidades de Procesamiento Gráfico (GPU), acelerando exponencialmente los tiempos de iteración. La arquitectura ResNet-50 y los pesos preentrenados de ImageNet se instanciaron directamente desde el módulo interno de aplicaciones Keras, garantizando la estandarización metodológica y la reproducibilidad exacta del experimento.
-
-== 3.3 Dataset
-
-El conjunto de datos utilizado corresponde al repositorio "Amazonia Garimpo Binario", recopilado y estructurado por Grupioni et al. @grupioniDeteccaoGarimpoNa2026. El dataset comprende un total masivo de 111,584 recortes de imágenes satelitales en formato PNG con una resolución espacial estandarizada de $128 times 128$ píxeles. La variable objetivo dicotómica `label_int` codifica la presencia confirmada de minería ilegal (com_garimpo, valor 1) frente a la selva intacta (sem_garimpo, valor 0).
+La arquitectura ResNet-50 actúa como el motor principal de extracción de características visuales gracias a su innovación en el diseño de topologías profundas @heDeepResidualLearning2015. Al incrementar la profundidad convolucional para capturar texturas abstractas, las redes secuenciales convencionales experimentan el fenómeno degenerativo de desvanecimiento del gradiente durante la retropropagación. ResNet-50 supera este obstáculo analítico incorporando bloques residuales provistos de conexiones de salto (*skip connections*) que desvían la identidad de entrada alrededor de los estratos convolucionales, obedeciendo la formulación $y = cal(F)(x, {W_i}) + x$. Esta topología garantiza un flujo ininterrumpido de gradientes matemáticos hacia las primeras capas, permitiendo entrenar con máxima estabilidad 50 capas ocultas parametrizadas @farahnakianMachineLearningAlgorithms2024. La @tabla-resnet sintetiza la estructura jerárquica de la red ResNet-50 utilizada en la experimentación.
 
 #figure(
-  grid(
-    columns: (1fr),
-    gutter: 15pt,
-    image("figures/pie_chart.png", width: 60%),
-    image("figures/dataset_samples.png", width: 95%)
-  ),
-  caption: [Arriba: Distribución balanceada de clases en el dataset Amazonia Garimpo Binario. Abajo: Muestras visuales de parches de selva intacta (sem_garimpo) frente a minas activas (com_garimpo).]
-) <fig-dataset>
+  block[
+    #set text(size: 8pt)
+    #table(
+      columns: (1.2fr, 1.4fr, 0.8fr, 0.8fr),
+      align: (col, row) => left,
+      inset: 4pt,
+      stroke: none,
+      table.hline(stroke: 0.8pt + black),
+      table.header([*Etapa*], [*Operación convolucional*], [*Filtros*], [*Bloques*]),
+      table.hline(stroke: 0.5pt + black),
+      [*Conv1*], [$7 times 7$, stride 2], [64], [1],
+      [*Max Pool*], [$3 times 3$, stride 2], [-], [1],
+      [*Conv2_x*], [[$1 times 1, 64$ \ $3 times 3, 64$ \ $1 times 1, 256$]], [256], [3],
+      [*Conv3_x*], [[$1 times 1, 128$ \ $3 times 3, 128$ \ $1 times 1, 512$]], [512], [4],
+      [*Conv4_x*], [[$1 times 1, 256$ \ $3 times 3, 256$ \ $1 times 1, 1024$]], [1024], [6],
+      [*Conv5_x*], [[$1 times 1, 512$ \ $3 times 3, 512$ \ $1 times 1, 2048$]], [2048], [3],
+      [*Clasificación*], [Global Average Pooling \ Fully Connected], [1], [1],
+      table.hline(stroke: 0.8pt + black)
+    )
+  ],
+  caption: [#smallcaps[Desglose estructural y topológico de la arquitectura convolucional ResNet-50 preentrenada.]],
+  kind: table,
+) <tabla-resnet>
 
-El atributo más destacable de este corpus de datos es su distribución perfectamente balanceada. La clase positiva contiene 56,037 instancias (50.22%), mientras que la clase negativa posee 55,547 instancias (49.78%), como se ilustra en la @fig-dataset. Este equilibrio estadístico erradica el sesgo inductivo clásico de los algoritmos de clasificación, permitiendo que la métrica de exactitud global sea un indicador fidedigno del rendimiento del modelo sin necesidad de aplicar técnicas de sobremuestreo artificial.
+Para establecer una línea base puramente secuencial y evaluar cuantitativamente el impacto de las conexiones residuales, el estudio implementa como modelo de comparación la arquitectura clásica VGG16 @cotolanApplicabilityPretrainedCNNs2024. VGG16 estructura sus representaciones internas utilizando exclusivamente filtros convolucionales pequeños de $3 times 3$ organizados en bloques secuenciales continuos @heDeepLearningForest2023. Su diseño carece de mecanismos de salto de identidad, lo que ilustra con claridad la degradación y pérdida de capacidad discriminativa cuando los gradientes se atenúan en topologías profundas. La contrastación empírica entre VGG16 y ResNet-50 justifica formalmente la superioridad del aprendizaje residual para la identificación de patrones multiespectrales en hábitats aluviales amazónicos @shahComparingInceptionV32023.
 
-== 3.4 Metodología Propuesta
+La evaluación del desempeño discriminativo se fundamenta sobre una matriz de confusión binaria cruzada que contabiliza las predicciones del modelo frente al terreno: Verdaderos Positivos ($T P$), Verdaderos Negativos ($T N$), Falsos Positivos ($F P$) y Falsos Negativos ($F N$) @rainioEvaluationMetricsStatistical2024. A partir de estos conteos absolutos, se derivan la Exactitud Global (*Accuracy*), la Precisión (*Precision*), la Sensibilidad (*Recall*), el F1-Score Macro y el Área Bajo la Curva AUC-ROC @richardsonReceiverOperatingCharacteristic2024. En el estricto contexto de la fiscalización y monitoreo ambiental amazónico, *se prioriza el Recall porque mide las minas reales que se escaparon (falsos negativos), mientras que la Precision mide las falsas alarmas (falsos positivos)* @Mdpicom2073439513. Un falso negativo implica que un campamento operativo de garimpo continúe deforestando y contaminando con mercurio sin ser detectado por las autoridades estatales, constituyendo una omisión ecológica inaceptable.
 
-El pipeline metodológico comienza con la ingesta y decodificación de las imágenes PNG, normalizando los tensores de píxeles al rango continuo $[0, 1]$ dividiendo por 255.0. Seguidamente, se aplica un protocolo estricto de Aumento de Datos (*Data Augmentation*) dinámico en memoria. Se configuran rotaciones aleatorias de hasta $20°$, inversiones horizontales (*flips*), y variaciones de escala (*zoom*) del 15% @adedejiImageAugmentationSatellite2022 @safonovaTenDeepLearning2023. Estas transformaciones estocásticas obligan al modelo a aprender características intrínsecas de las minas en lugar de memorizar orientaciones específicas, combatiendo directamente el sobreajuste.
+#set math.equation(numbering: "(1)")
+$ "Accuracy" = (T P + T N) / (T P + T N + F P + F N) $ <eq-acc>
+$ "Precision" = T P / (T P + F P) $ <eq-prec>
+$ "Recall" = T P / (T P + F N) $ <eq-rec>
+$ "F1" = 2 times ("Precision" times "Recall") / ("Precision" + "Recall") $ <eq-f1>
+
+
+== _3.2. Herramientas y Tecnologías_
+
+El desarrollo integral del pipeline de procesamiento, modelamiento geoespacial y aprendizaje automático se ejecutó de manera estandarizada utilizando el lenguaje de programación Python en su versión estable 3.12, operado dentro de los entornos interactivos computacionales Jupyter Notebook y Google Colab. La gestión de grandes volúmenes de datos geoespaciales, la estructuración de catálogos y el cálculo de operaciones algebraicas de alto rendimiento sobre matrices multidimensionales se realizaron con las librerías científicas especializadas NumPy y Pandas @Mdpicom2076341712.
+
+La construcción arquitectónica, entrenamiento acelerado en hardware de Unidades de Procesamiento Gráfico (GPU) y evaluación paramétrica de los modelos convolucionales se implementaron mediante la biblioteca de aprendizaje profundo TensorFlow y su interfaz de alto nivel Keras. Asimismo, las tareas de particionamiento estratificado de muestras, normalización tensorial y computación automatizada de métricas estadísticas de validación fueron operadas a través de los módulos de la librería de aprendizaje automático Scikit-learn @kingmaAdamMethodStochastic2017.
+
+
+== _3.3. Dataset_
+
+El conjunto de datos utilizado en la experimentación corresponde al repositorio público "Amazonia Garimpo Binario", estructurado y publicado en la plataforma Kaggle por Grupioni et al. @grupioniDeteccaoGarimpoNa2026. El corpus geoespacial comprende un total masivo de 111,584 recortes de imágenes satelitales ópticas en formato PNG, extraídas con una resolución geométrica estandarizada de $128 times 128$ píxeles. La gestión relacional de las muestras satelitales se rige por el archivo de control `manifesto_chips.csv`, el cual articula los atributos de entrada y salida para el modelamiento predictivo. Específicamente, este documento define la variable de entrada independiente $X$ (`png_path`) como la ruta relativa del archivo de imagen en el sistema de directorios, y la variable de salida dependiente a predecir $Y$ (`label_int`) como un indicador entero binario. Esta etiqueta asigna estrictamente el valor entero 1 para confirmar la presencia de minería ilegal activa (`com_garimpo`) y el valor entero 0 para parches de selva amazónica conservada sin alteración antrópica (`sem_garimpo`). La @tabla-manifesto detalla las especificaciones de las variables del catálogo.
+
+#figure(
+  block[
+    #set text(size: 8pt)
+    #table(
+      columns: (1.2fr, 1fr, 2fr),
+      align: (col, row) => left,
+      inset: 4pt,
+      stroke: none,
+      table.hline(stroke: 0.8pt + black),
+      table.header([*Columna del CSV*], [*Tipo de dato*], [*Descripción técnica y función paramétrica en el modelo*]),
+      table.hline(stroke: 0.5pt + black),
+      [`png_path` ($X$)], [Cadena / Ruta], [Ruta relativa de la imagen satelital multiespectral en formato PNG de $128 times 128$ píxeles.],
+      [`label_int` ($Y$)], [Entero binario], [Variable objetivo donde 1 codifica minería ilegal activa (`com_garimpo`) y 0 selva intacta (`sem_garimpo`).],
+      [`split`], [Categórico], [Identificador de partición estratificada para entrenamiento (80%), validación (10%) y prueba (10%).],
+      table.hline(stroke: 0.8pt + black)
+    )
+  ],
+  caption: [#smallcaps[Estructura y diccionario de datos del catálogo satelital manifesto_chips.csv.]],
+  kind: table,
+) <tabla-manifesto>
+
+El atributo más destacable del corpus satelital utilizado radica en su equilibrio distribucional casi perfecto entre las clases en estudio. La clase positiva de minería activa contiene exactamente 56,037 instancias satelitales (50.22%), mientras que la clase negativa de selva conservada agrupa 55,547 instancias (49.78%), según se ilustra en el análisis gráfico de la @fig-pie. Este balance estadístico erradica el sesgo inductivo mayoritario común en clasificadores algorítmicos, permitiendo que la métrica de exactitud global sea un estimador fidedigno sin recurrir a técnicas de sobremuestreo sintético.
+
+#figure(
+  image("figures/pie_chart.png", width: 85%),
+  caption: [Distribución balanceada de clases en el dataset Amazonia Garimpo Binario.]
+) <fig-pie>
+
+Por otra parte, la @fig-muestras presenta muestras visuales comparativas del catálogo, evidenciando las notables diferencias radiométricas y morfológicas entre los parches de selva amazónica intacta y las zonas con deforestación activa y pozas de relaves.
+
+#figure(
+  image("figures/dataset_samples.png", width: 100%),
+  caption: [Muestras visuales comparativas de parches de selva intacta (sem_garimpo) frente a áreas de minería activa y pozas de relaves (com_garimpo).]
+) <fig-muestras>
+
+
+== _3.4. Metodología Propuesta_
+
+El pipeline metodológico inicia con el preprocesamiento de los tensores fotométricos, ejecutando una normalización radiométrica que reescala los valores enteros de intensidad de los píxeles desde $[0, 255]$ hacia el dominio continuo $[0, 1]$. Para generalizar las invarianzas espaciales y evitar severamente el sobreajuste (*overfitting*), se implementa un protocolo estricto de aumento de datos dinámico (*Data Augmentation*) en tiempo real durante cada época @adedejiImageAugmentationSatellite2022. Este generador estocástico aplica transformaciones afines arbitrarias en memoria: rotaciones uniformes de hasta $20°$, inversiones horizontales automáticas (*horizontal flips*) y variaciones proporcionales de escala o zoom del 15% @safonovaTenDeepLearning2023. Estas mutaciones obligan al modelo convolucional a generalizar características intrínsecas de las excavaciones mineras y pozas de relaves, impidiendo que la red memorice las orientaciones espaciales estáticas del conjunto de entrenamiento.
+
+La optimización paramétrica de la red computa la función de pérdida de Entropía Cruzada Binaria (*Binary Crossentropy Loss*), la cual penaliza de forma logarítmica las divergencias estadísticas entre las probabilidades calculadas por la neurona de salida sigmoidal y las etiquetas reales del terreno. Para la actualización iterativa de los pesos sinápticos, se utiliza el optimizador Adam (*Adaptive Moment Estimation*) con una tasa de aprendizaje hiperparametrizada en $alpha = 10^{-4}$ @kingmaAdamMethodStochastic2017. El algoritmo Adam actualiza los momentos estadísticos del gradiente según las siguientes ecuaciones de recurrencia:
+
+$ m_t = beta_1 m_{t-1} + (1 - beta_1) g_t $ <eq-adam-m>
+$ v_t = beta_2 v_{t-1} + (1 - beta_2) g_t^2 $ <eq-adam-v>
+$ theta_t = theta_{t-1} - (alpha hat(m)_t) / (sqrt(hat(v)_t) + epsilon) $ <eq-adam-up>
+
+Donde $m_t$ y $v_t$ representan el primer y segundo momento del gradiente $g_t$ con corrección de sesgo ($hat(m)_t, hat(v)_t$), utilizando factores de decaimiento $beta_1 = 0.9$ y $beta_2 = 0.999$. La secuencia operativa integral de preprocesamiento, extracción y optimización se ilustra en el diagrama de flujo de la @fig-flowchart.
 
 #figure(
   align(center)[
-  #rect(width: 80%, inset: 12pt, fill: luma(245), radius: 5pt)[
-    #text(weight: "bold")[Diagrama de Flujo Metodológico]\
-    #v(5pt)
-    1. *Carga de Datos:* Lectura iterativa del archivo CSV `manifesto_chips.csv`.\
-    2. *Preprocesamiento:* Normalización de tensores $[0, 1]$ y partición 80/10/10.\
-    3. *Data Augmentation:* Rotaciones (20°), Horizontal Flips, Zoom (15%).\
-    4. *Feature Extraction:* Paso hacia adelante (Forward Pass) por ResNet-50.\
-    5. *Clasificación:* Capas densas (Flatten -> Dense 512 -> Dropout 0.5 -> Sigmoid).\
-    6. *Optimización:* Cálculo de Binary Crossentropy Loss y ajuste de pesos vía Adam.\
-    7. *Validación:* Early Stopping monitoreando la pérdida en validación.
+  #rect(width: 85%, inset: 12pt, fill: luma(245), radius: 5pt)[
+    #text(weight: "bold", size: 9pt)[Diagrama de Flujo del Pipeline Metodológico]\
+    #v(6pt)
+    #set text(size: 8pt)
+    1. *Ingesta de Datos:* Lectura del catálogo relacional `manifesto_chips.csv`.\
+    2. *Preprocesamiento:* Normalización radiométrica $[0, 1]$ y división estratificada (80/10/10).\
+    3. *Data Augmentation Dinámico:* Rotaciones (20°), Horizontal Flips, Zoom afín (15%).\
+    4. *Extracción Jerárquica:* Forward pass en arquitectura residual preentrenada ResNet-50.\
+    5. *Clasificación Densa:* Global Average Pooling -> Dense (512) -> Dropout (0.5) -> Sigmoid.\
+    6. *Optimización Sináptica:* Cálculo de BCE Loss y retropropagación vía Adam ($lr=10^{-4}$).\
+    7. *Control de Parada:* Monitoreo de pérdida en validación mediante Early Stopping (paciencia = 5).
   ]
   ],
-  caption: [Flujo secuencial del pipeline de preprocesamiento, entrenamiento y clasificación.]
+  caption: [Flujo secuencial del pipeline metodológico de preprocesamiento, aumento de datos y entrenamiento predictivo.]
 ) <fig-flowchart>
 
-El particionamiento del dataset se ejecuta de forma estratificada para mantener la proporción de clases, destinando un 80% para entrenamiento activo, 10% para validación cruzada y 10% para pruebas ciegas. La compilación del modelo emplea el optimizador Adam con una tasa de aprendizaje hiperparametrizada de $lr=10^{-4}$ @kingmaAdamMethodStochastic2017. La función de costo asignada es la Entropía Cruzada Binaria (BCE Loss), la cual penaliza logarítmicamente las divergencias entre las predicciones probabilísticas y las etiquetas reales. 
-
-Para garantizar la generalización óptima y evitar el sobreentrenamiento, el algoritmo incorpora un mecanismo de parada temprana (*Early Stopping*). Este componente monitorea la métrica de pérdida en el conjunto de validación al final de cada época. El entrenamiento se detiene automáticamente si no se observa una reducción mínima en un horizonte de paciencia de 5 épocas, restaurando los pesos sinápticos de la iteración más exitosa. El bloque de código de la @fig-pseudocode detalla el pseudocódigo formal del ciclo de entrenamiento implementado.
+Para salvaguardar la capacidad de generalización en datos satelitales ciegos, el algoritmo incorpora un mecanismo de parada temprana (*Early Stopping*). Este módulo supervisa la evolución de la función de pérdida en el subconjunto de validación al término de cada época convolucional. Si no se registra un descenso en la pérdida por un intervalo continuo de paciencia configurado en 5 épocas, el entrenamiento se interrumpe automáticamente y se restauran los parámetros sinápticos exactos de la iteración con menor error. El ciclo algorítmico completo de entrenamiento con control de sobreajuste se formaliza en el pseudocódigo de la @fig-pseudocode.
 
 #figure(
   align(left)[
   #rect(width: 95%, inset: 10pt, fill: luma(250))[
     ```python
-    # Pseudocódigo del Algoritmo de Entrenamiento
-    modelo = Inicializar_ResNet50(pesos='imagenet', incluir_tope=Falso)
-    Congelar_Capas_Inferiores(modelo)
-    modelo_completo = Agregar_Capas_Clasificacion(modelo, dropout=0.5, salida='sigmoid')
-    modelo_completo.compilar(optimizador=Adam(lr=1e-4), perdida=BinaryCrossEntropy())
+    # Pseudocódigo: Entrenamiento con Transfer Learning y Early Stopping
+    modelo_base = Instanciar_ResNet50(pesos='imagenet', incluir_tope=Falso)
+    Congelar_Capas_Base(modelo_base)
+    clasificador = Construir_Tope(modelo_base, neuronas=512, dropout=0.5, salida='sigmoid')
+    clasificador.compilar(optimizador=Adam(lr=1e-4), pérdida=BinaryCrossEntropy())
     
-    mejor_perdida_val = infinito
+    mejor_pérdida_val = Infinito
     paciencia = 5
-    contador_sin_mejora = 0
+    iteraciones_sin_mejora = 0
     
-    PARA epoca EN RANGO(max_epocas):
-        PARA lote_imagenes, lote_etiquetas EN generador_entrenamiento:
-            imagenes_aumentadas = Data_Augmentation(lote_imagenes)
-            predicciones = modelo_completo.forward(imagenes_aumentadas)
-            perdida = Calcular_BCE(predicciones, lote_etiquetas)
-            gradientes = Calcular_Gradientes(perdida)
-            Actualizar_Pesos(gradientes, Adam)
+    PARA época EN RANGO(max_épocas):
+        PARA lote_img, lote_lbl EN generador_entrenamiento:
+            img_aumentadas = Data_Augmentation(lote_img, rot=20, flip=Verdadero, zoom=0.15)
+            predicciones = clasificador.forward(img_aumentadas)
+            error_lote = BCE_Loss(predicciones, lote_lbl)
+            gradientes = Retropropagar(error_lote)
+            Actualizar_Pesos(clasificador, gradientes, Adam)
             
-        perdida_val = modelo_completo.evaluar(generador_validacion)
-        SI perdida_val < mejor_perdida_val:
-            mejor_perdida_val = perdida_val
-            Guardar_Pesos(modelo_completo)
-            contador_sin_mejora = 0
+        pérdida_val = clasificador.evaluar(generador_validación)
+        SI pérdida_val < mejor_pérdida_val:
+            mejor_pérdida_val = pérdida_val
+            Guardar_Pesos_Óptimos(clasificador)
+            iteraciones_sin_mejora = 0
         SINO:
-            contador_sin_mejora = contador_sin_mejora + 1
-            SI contador_sin_mejora >= paciencia:
+            iteraciones_sin_mejora = iteraciones_sin_mejora + 1
+            SI iteraciones_sin_mejora >= paciencia:
                 Detener_Entrenamiento()
-                Restaurar_Mejores_Pesos()
+                Restaurar_Pesos_Óptimos(clasificador)
                 ROMPER
     ```
   ]
   ],
-  caption: [Pseudocódigo del proceso de optimización del modelo con parada temprana.]
+  caption: [Pseudocódigo formal del proceso de entrenamiento algorítmico y optimización paramétrica del modelo.]
 ) <fig-pseudocode>
-
-== 3.5 Desglose Arquitectónico de ResNet-50
-
-La arquitectura ResNet-50 implementada consta exactamente de 50 capas parametrizadas agrupadas en 5 etapas convolucionales (Conv1 a Conv5), culminando en una capa de *Average Pooling* y una capa densa (*Fully Connected*) para la clasificación final. A diferencia de las redes secuenciales convencionales, ResNet-50 utiliza bloques de cuello de botella (*bottleneck blocks*) diseñados estructuralmente para reducir la dimensionalidad y el costo computacional antes de aplicar las convoluciones más pesadas de $3 times 3$. 
-
-La etapa inicial (Conv1) aplica un kernel masivo de $7 times 7$ con un salto (*stride*) de 2, produciendo 64 mapas de características espaciales. Este estrato actúa como un extractor primario de bordes y texturas básicas del dosel amazónico. Inmediatamente, se aplica una operación de agrupamiento máximo (*Max Pooling*) de $3 times 3$ con *stride* de 2, reduciendo agresivamente la resolución espacial y confiriendo invarianza traslacional robusta frente al desplazamiento de las minas en los parches satelitales.
-
-La etapa Conv2_x contiene 3 bloques residuales en cascada. Cada bloque implementa el patrón de cuello de botella: una convolución de $1 times 1$ (64 filtros) para comprimir dimensionalidad, una convolución central de $3 times 3$ (64 filtros) para extraer características espaciales locales de los cuerpos de agua fangosos, y otra convolución de $1 times 1$ (256 filtros) para restaurar la dimensionalidad profunda. La conexión de salto (*skip connection*) suma la identidad de entrada directamente a la salida del bloque antes de aplicar la función de activación ReLU final.
-
-Las etapas subsecuentes incrementan exponencialmente el número de filtros mientras reducen la dimensionalidad espacial mediante saltos fraccionales (*strided convolutions*). La etapa Conv3_x alberga 4 bloques (512 filtros de salida), Conv4_x contiene 6 bloques (1024 filtros de salida), y finalmente Conv5_x posee 3 bloques (2048 filtros de salida masiva). Esta jerarquía profunda permite al modelo componer texturas elementales en geometrías abstractas complejas, como la forma serpentina característica del garimpo aluvial en los lechos de los ríos tropicales.
-
-El uso del bloque de cuello de botella reduce la complejidad algorítmica y el número de operaciones multiplicativas acumuladas (*Multiply-Accumulate Operations*, MACs). Una capa tradicional de $3 times 3$ operando sobre 256 canales requeriría $3 times 3 times 256 times 256 approx 600,000$ parámetros. Por el contrario, la secuencia de cuello de botella reduce este costo a apenas $1 times 1 times 256 times 64 + 3 times 3 times 64 times 64 + 1 times 1 times 64 times 256 approx 70,000$ parámetros, garantizando eficiencia computacional crítica para el despliegue del sistema en agencias gubernamentales.
-
-#figure(
-  table(
-    columns: (auto, auto, auto, auto),
-    align: center,
-    inset: 6pt,
-    table.header([*Etapa*], [*Operación*], [*Filtros*], [*Repeticiones*]),
-    [*Conv1*], [$7 times 7$, stride 2], [64], [1],
-    [*Max Pool*], [$3 times 3$, stride 2], [-], [1],
-    [*Conv2_x*], [[$1 times 1, 64$ \ $3 times 3, 64$ \ $1 times 1, 256$]], [256], [3],
-    [*Conv3_x*], [[$1 times 1, 128$ \ $3 times 3, 128$ \ $1 times 1, 512$]], [512], [4],
-    [*Conv4_x*], [[$1 times 1, 256$ \ $3 times 3, 256$ \ $1 times 1, 1024$]], [1024], [6],
-    [*Conv5_x*], [[$1 times 1, 512$ \ $3 times 3, 512$ \ $1 times 1, 2048$]], [2048], [3],
-    [*Clasificación*], [Global Average Pooling \ Fully Connected], [1], [1],
-  ),
-  caption: [Desglose estructural y topológico de la arquitectura ResNet-50 preentrenada.],
-) <tabla-resnet>
-
-== 3.6 Formalización Matemática de las Métricas de Evaluación
-
-Para cuantificar rigurosamente el rendimiento del modelo frente a la detección de garimpo destructivo, se implementa una matriz de confusión binaria cruzada. Esta matriz contabiliza los Verdaderos Positivos ($"TP"$), correspondientes a minas correctamente detectadas; los Verdaderos Negativos ($"TN"$), selva intacta correctamente clasificada; los Falsos Positivos ($"FP"$), cuerpos naturales confundidos con minas; y los Falsos Negativos ($"FN"$), minas activas que el modelo ignoró erróneamente.
-
-La Exactitud Global (*Accuracy*) mide la proporción total de predicciones correctas sobre el universo completo de muestras satelitales analizadas. Se define matemáticamente como:
-$ "Accuracy" = ("TP" + "TN") / ("TP" + "TN" + "FP" + "FN") $
-
-La Precisión (*Precision*) determina la fiabilidad de las alertas positivas emitidas por el sistema clasificador. Evalúa qué fracción de las áreas marcadas como garimpo son efectivamente zonas de extracción ilegal. Su fórmula es:
-$ "Precision" = "TP" / ("TP" + "FP") $
-
-La Sensibilidad (*Recall* o *True Positive Rate*) constituye la métrica más crítica en el dominio operativo de monitoreo y conservación ambiental continuo. Mide la capacidad intrínseca del sistema para capturar todos los focos mineros existentes sin omitir alertas tempranas. Se expresa como:
-$ "Recall" = "TP" / ("TP" + "FN") $
-
-El F1-Score Macro consolida la Precisión y el Recall en una media armónica única balanceada, penalizando fuertemente a los modelos predictivos que priorizan una métrica a expensas de sacrificar severamente la otra. Su formulación teórica es:
-$ "F1" = 2 times ("Precision" times "Recall") / ("Precision" + "Recall") $
-
-== 3.7 Formulación Matemática del Optimizador Adam
-
-El algoritmo de optimización Adam (*Adaptive Moment Estimation*) reemplaza el descenso de gradiente estocástico tradicional para actualizar iterativamente los parámetros del modelo @kingmaAdamMethodStochastic2017. Adam combina heurísticamente las ventajas del algoritmo AdaGrad y RMSProp calculando tasas de aprendizaje adaptativas individuales para cada peso de la red.
-
-Adam mantiene un registro del primer momento (media) y del segundo momento (varianza no centrada) de los gradientes matemáticos, representados por los vectores $m_t$ y $v_t$ respectivamente. En la iteración de entrenamiento $t$, los momentos estadísticos se actualizan utilizando las tasas de decaimiento exponenciales $beta_1$ y $beta_2$:
-$ m_t = beta_1 m_{t-1} + (1 - beta_1) g_t $
-$ v_t = beta_2 v_{t-1} + (1 - beta_2) g_t^2 $
-
-Donde $g_t$ representa el vector de gradiente de la función de costo multivariable respecto a los parámetros de red $theta$ en el instante $t$. Dado que los momentos $m_t$ y $v_t$ se inicializan en cero absoluto, estos estimadores sufren un sesgo matemático hacia cero durante las iteraciones iniciales. Para compensar este déficit analítico, Adam aplica sistemáticamente una corrección de sesgo asintótica:
-$ hat(m)_t = m_t / (1 - beta_1^t) $
-$ hat(v)_t = v_t / (1 - beta_2^t) $
-
-Finalmente, los pesos sinápticos de la arquitectura de extracción de características se actualizan sustrayendo la fracción adaptativa del gradiente, escalada por el hiperparámetro crítico de tasa de aprendizaje $alpha$:
-$ theta_t = theta_{t-1} - (alpha hat(m)_t) / (sqrt(hat(v)_t) + epsilon) $
-
-En este estudio de monitoreo satelital, los hiperparámetros del optimizador se configuraron estrictamente en $alpha = 1e-4$, $beta_1 = 0.9$, $beta_2 = 0.999$, y la constante de estabilidad numérica $epsilon = 1e-7$.
-
-== 3.8 Aumento de Datos y Pseudocódigo
-
-El procedimiento dinámico de aumento de datos (*Data Augmentation*) en tiempo real resulta imperativo para mitigar drásticamente el sobreajuste (*overfitting*). Se aplicaron rotaciones aleatorias uniformes de [-20°, 20°], inversión horizontal estocástica, escalado afín (zoom de 85% a 115%) y ajustes de brillo estocásticos. Este pipeline matemático, implementado mediante la API `ImageDataGenerator` de TensorFlow, multiplica exponencialmente el tamaño efectivo del conjunto de entrenamiento en memoria.
 
 // ============================================================
 // SECCIÓN 4: RESULTADOS
