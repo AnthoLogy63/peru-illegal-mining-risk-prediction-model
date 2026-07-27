@@ -1,0 +1,105 @@
+TRAINING MODELS (SPLIT POR BLOQUES, v2) — RESULTADOS
+Fecha: 2026-07-26 22:44
+Device: cuda | GPU: NVIDIA GeForce RTX 5060
+PyTorch: 2.12.0.dev20260408+cu128
+Corrida: v2_bloques | Manifiestos: C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\05_model_input\v2_bloques
+Batch=32 | Max epochs=30 | Patience=7
+LR CNN=0.0001 | LR Transformer=3e-05
+Train chips: 71,592 | Val: 16,518
+
+============================================================
+MODELO: EfficientNet-B0 (v2 bloques) (efficientnet_b0) | LR=0.0001
+============================================================
+
+Epoch 01/30 | train loss 0.9476 acc 0.669 | val loss 0.5288 acc 0.767 F1 0.766 (com recall 0.672) | 222s
+Epoch 02/30 | train loss 0.5285 acc 0.730 | val loss 0.4327 acc 0.798 F1 0.798 (com recall 0.741) | 143s
+Epoch 03/30 | train loss 0.4943 acc 0.748 | val loss 0.3969 acc 0.808 F1 0.807 (com recall 0.735) | 145s
+Epoch 04/30 | train loss 0.4784 acc 0.756 | val loss 0.4230 acc 0.809 F1 0.809 (com recall 0.811) | 147s
+Epoch 05/30 | train loss 0.4665 acc 0.766 | val loss 0.3967 acc 0.808 F1 0.808 (com recall 0.802) | 147s
+Epoch 06/30 | train loss 0.4571 acc 0.772 | val loss 0.4094 acc 0.789 F1 0.789 (com recall 0.785) | 146s
+Epoch 07/30 | train loss 0.4489 acc 0.779 | val loss 0.4410 acc 0.786 F1 0.786 (com recall 0.723) | 144s
+Epoch 08/30 | train loss 0.4427 acc 0.782 | val loss 0.4284 acc 0.781 F1 0.781 (com recall 0.815) | 150s
+Epoch 09/30 | train loss 0.4388 acc 0.784 | val loss 0.4486 acc 0.780 F1 0.778 (com recall 0.835) | 150s
+Epoch 10/30 | train loss 0.4301 acc 0.790 | val loss 0.4125 acc 0.788 F1 0.788 (com recall 0.756) | 150s
+Epoch 11/30 | train loss 0.4251 acc 0.792 | val loss 0.4185 acc 0.803 F1 0.803 (com recall 0.783) | 154s
+
+→ Mejor epoch: 4 | val macro F1: 0.8090
+→ val accuracy: 0.8091 | val recall com_garimpo: 0.8108
+→ Checkpoint: C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\06_models\v2_bloques\efficientnet_b0_best.pt
+→ CSV epochs: C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\08_reporting\v2_bloques\epochs_efficientnet_b0_v2_bloques.csv
+
+============================================================
+MODELO: ResNet-50 (v2 bloques) (resnet50) | LR=0.0001
+============================================================
+
+Epoch 01/30 | train loss 0.5560 acc 0.703 | val loss 0.4654 acc 0.768 F1 0.766 (com recall 0.643) | 143s
+Epoch 02/30 | train loss 0.5071 acc 0.739 | val loss 0.4323 acc 0.787 F1 0.786 (com recall 0.690) | 113s
+Epoch 03/30 | train loss 0.4937 acc 0.747 | val loss 0.4180 acc 0.799 F1 0.799 (com recall 0.742) | 115s
+Epoch 04/30 | train loss 0.4833 acc 0.753 | val loss 0.4170 acc 0.805 F1 0.805 (com recall 0.798) | 114s
+Epoch 05/30 | train loss 0.4740 acc 0.758 | val loss 0.4242 acc 0.789 F1 0.787 (com recall 0.673) | 117s
+Epoch 06/30 | train loss 0.4658 acc 0.764 | val loss 0.3923 acc 0.808 F1 0.807 (com recall 0.752) | 114s
+Epoch 07/30 | train loss 0.4608 acc 0.768 | val loss 0.4395 acc 0.794 F1 0.793 (com recall 0.698) | 116s
+Epoch 08/30 | train loss 0.4543 acc 0.772 | val loss 0.4228 acc 0.789 F1 0.785 (com recall 0.648) | 114s
+Epoch 09/30 | train loss 0.4506 acc 0.773 | val loss 0.3990 acc 0.807 F1 0.807 (com recall 0.784) | 112s
+Epoch 10/30 | train loss 0.4447 acc 0.779 | val loss 0.4102 acc 0.803 F1 0.801 (com recall 0.701) | 112s
+Epoch 11/30 | train loss 0.4403 acc 0.781 | val loss 0.4170 acc 0.796 F1 0.796 (com recall 0.778) | 112s
+Epoch 12/30 | train loss 0.4358 acc 0.782 | val loss 0.4206 acc 0.795 F1 0.794 (com recall 0.710) | 115s
+Epoch 13/30 | train loss 0.4337 acc 0.786 | val loss 0.4177 acc 0.790 F1 0.789 (com recall 0.817) | 116s
+
+→ Mejor epoch: 6 | val macro F1: 0.8074
+→ val accuracy: 0.8077 | val recall com_garimpo: 0.7522
+→ Checkpoint: C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\06_models\v2_bloques\resnet50_best.pt
+→ CSV epochs: C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\08_reporting\v2_bloques\epochs_resnet50_v2_bloques.csv
+
+============================================================
+MODELO: Swin Transformer (v2 bloques) (swin_tiny_patch4_window7_224) | LR=3e-05
+============================================================
+
+Epoch 01/30 | train loss 0.5127 acc 0.728 | val loss 0.4017 acc 0.805 F1 0.805 (com recall 0.740) | 180s
+Epoch 02/30 | train loss 0.4732 acc 0.757 | val loss 0.4101 acc 0.797 F1 0.792 (com recall 0.937) | 176s
+Epoch 03/30 | train loss 0.4579 acc 0.767 | val loss 0.4004 acc 0.801 F1 0.800 (com recall 0.745) | 173s
+Epoch 04/30 | train loss 0.4466 acc 0.776 | val loss 0.3741 acc 0.810 F1 0.809 (com recall 0.836) | 167s
+Epoch 05/30 | train loss 0.4379 acc 0.780 | val loss 0.3887 acc 0.804 F1 0.803 (com recall 0.861) | 166s
+Epoch 06/30 | train loss 0.4292 acc 0.785 | val loss 0.3988 acc 0.800 F1 0.796 (com recall 0.913) | 167s
+Epoch 07/30 | train loss 0.4231 acc 0.788 | val loss 0.4103 acc 0.788 F1 0.783 (com recall 0.910) | 166s
+Epoch 08/30 | train loss 0.4139 acc 0.795 | val loss 0.3769 acc 0.808 F1 0.806 (com recall 0.888) | 176s
+Epoch 09/30 | train loss 0.4078 acc 0.799 | val loss 0.4474 acc 0.774 F1 0.770 (com recall 0.895) | 205s
+Epoch 10/30 | train loss 0.4026 acc 0.804 | val loss 0.4341 acc 0.788 F1 0.786 (com recall 0.865) | 205s
+Epoch 11/30 | train loss 0.3970 acc 0.807 | val loss 0.4239 acc 0.790 F1 0.787 (com recall 0.878) | 179s
+
+→ Mejor epoch: 4 | val macro F1: 0.8093
+→ val accuracy: 0.8097 | val recall com_garimpo: 0.8358
+→ Checkpoint: C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\06_models\v2_bloques\swin_tiny_patch4_window7_224_best.pt
+→ CSV epochs: C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\08_reporting\v2_bloques\epochs_swin_tiny_patch4_window7_224_v2_bloques.csv
+
+============================================================
+MODELO: ViT tiny (v2 bloques) (vit_tiny_patch16_224) | LR=3e-05
+============================================================
+
+Epoch 01/30 | train loss 0.5326 acc 0.713 | val loss 0.4118 acc 0.802 F1 0.800 (com recall 0.878) | 99s
+Epoch 02/30 | train loss 0.4946 acc 0.740 | val loss 0.3896 acc 0.806 F1 0.806 (com recall 0.780) | 100s
+Epoch 03/30 | train loss 0.4808 acc 0.751 | val loss 0.3993 acc 0.804 F1 0.803 (com recall 0.824) | 106s
+Epoch 04/30 | train loss 0.4748 acc 0.755 | val loss 0.4150 acc 0.797 F1 0.795 (com recall 0.890) | 107s
+Epoch 05/30 | train loss 0.4685 acc 0.758 | val loss 0.4015 acc 0.794 F1 0.794 (com recall 0.808) | 103s
+Epoch 06/30 | train loss 0.4623 acc 0.763 | val loss 0.3987 acc 0.804 F1 0.802 (com recall 0.874) | 102s
+Epoch 07/30 | train loss 0.4574 acc 0.766 | val loss 0.4005 acc 0.790 F1 0.790 (com recall 0.762) | 96s
+Epoch 08/30 | train loss 0.4522 acc 0.769 | val loss 0.4018 acc 0.794 F1 0.792 (com recall 0.697) | 113s
+Epoch 09/30 | train loss 0.4453 acc 0.774 | val loss 0.4107 acc 0.797 F1 0.797 (com recall 0.762) | 116s
+
+→ Mejor epoch: 2 | val macro F1: 0.8059
+→ val accuracy: 0.8059 | val recall com_garimpo: 0.7798
+→ Checkpoint: C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\06_models\v2_bloques\vit_tiny_patch16_224_best.pt
+→ CSV epochs: C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\08_reporting\v2_bloques\epochs_vit_tiny_patch16_224_v2_bloques.csv
+
+============================================================
+RESUMEN COMPARATIVO (validation, v2_bloques)
+============================================================
+
+                        model                    timm_name    variant      lr  best_epoch  epochs_run  val_macro_f1  val_accuracy  val_recall_com_garimpo  val_f1_com_garimpo  val_f1_sem_garimpo                                                                                                                                                     checkpoint
+Swin Transformer (v2 bloques) swin_tiny_patch4_window7_224 v2_bloques 0.00003           4          11        0.8093        0.8097                  0.8358              0.8179              0.8007 C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\06_models\v2_bloques\swin_tiny_patch4_window7_224_best.pt
+ EfficientNet-B0 (v2 bloques)              efficientnet_b0 v2_bloques 0.00010           4          11        0.8090        0.8091                  0.8108              0.8128              0.8051              C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\06_models\v2_bloques\efficientnet_b0_best.pt
+       ResNet-50 (v2 bloques)                     resnet50 v2_bloques 0.00010           6          13        0.8074        0.8077                  0.7522              0.8000              0.8148                     C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\06_models\v2_bloques\resnet50_best.pt
+        ViT tiny (v2 bloques)         vit_tiny_patch16_224 v2_bloques 0.00003           2           9        0.8059        0.8059                  0.7798              0.8042              0.8075         C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\06_models\v2_bloques\vit_tiny_patch16_224_best.pt
+
+MEJOR MODELO (v2_bloques): Swin Transformer (v2 bloques) | val macro F1 = 0.8093
+Checkpoint: C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\06_models\v2_bloques\swin_tiny_patch4_window7_224_best.pt

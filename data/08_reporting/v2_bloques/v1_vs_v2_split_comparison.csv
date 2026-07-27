@@ -1,0 +1,4 @@
+split,n_chips_v1,n_rasteres_v1,com_garimpo_pct_v1,n_chips_v2,n_rasteres_v2,com_garimpo_pct_v2
+test,14806,2,19.1,17312,11,50.2
+train,81938,8,56.1,71592,12,49.5
+val,14840,2,45.3,16518,11,51.1

@@ -1,0 +1,5 @@
+model,timm_name,variant,lr,best_epoch,epochs_run,val_macro_f1,val_accuracy,val_recall_com_garimpo,val_f1_com_garimpo,val_f1_sem_garimpo,checkpoint
+Swin Transformer (v2 bloques),swin_tiny_patch4_window7_224,v2_bloques,3e-05,4,11,0.8093,0.8097,0.8358,0.8179,0.8007,C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\06_models\v2_bloques\swin_tiny_patch4_window7_224_best.pt
+EfficientNet-B0 (v2 bloques),efficientnet_b0,v2_bloques,0.0001,4,11,0.809,0.8091,0.8108,0.8128,0.8051,C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\06_models\v2_bloques\efficientnet_b0_best.pt
+ResNet-50 (v2 bloques),resnet50,v2_bloques,0.0001,6,13,0.8074,0.8077,0.7522,0.8,0.8148,C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\06_models\v2_bloques\resnet50_best.pt
+ViT tiny (v2 bloques),vit_tiny_patch16_224,v2_bloques,3e-05,2,9,0.8059,0.8059,0.7798,0.8042,0.8075,C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\06_models\v2_bloques\vit_tiny_patch16_224_best.pt

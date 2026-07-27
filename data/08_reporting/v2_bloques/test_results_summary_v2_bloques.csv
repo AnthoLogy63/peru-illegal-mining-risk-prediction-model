@@ -1,0 +1,5 @@
+model,variant,checkpoint,train_best_epoch,test_accuracy,test_macro_f1,test_f1_com_garimpo,test_f1_sem_garimpo,test_recall_com_garimpo,test_precision_com_garimpo
+swin_tiny_patch4_window7_224,v2_bloques,swin_tiny_patch4_window7_224_best.pt,4,0.7897,0.7897,0.7919,0.7875,0.7972,0.7866
+efficientnet_b0,v2_bloques,efficientnet_b0_best.pt,4,0.7744,0.7744,0.7715,0.7773,0.7589,0.7846
+resnet50,v2_bloques,resnet50_best.pt,6,0.7477,0.7465,0.729,0.7639,0.6763,0.7906
+vit_tiny_patch16_224,v2_bloques,vit_tiny_patch16_224_best.pt,2,0.7371,0.7363,0.7214,0.7511,0.6783,0.7704

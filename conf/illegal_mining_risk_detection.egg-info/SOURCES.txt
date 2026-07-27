@@ -1,0 +1,6 @@
+pyproject.toml
+illegal_mining_risk_detection.egg-info/PKG-INFO
+illegal_mining_risk_detection.egg-info/SOURCES.txt
+illegal_mining_risk_detection.egg-info/dependency_links.txt
+illegal_mining_risk_detection.egg-info/requires.txt
+illegal_mining_risk_detection.egg-info/top_level.txt

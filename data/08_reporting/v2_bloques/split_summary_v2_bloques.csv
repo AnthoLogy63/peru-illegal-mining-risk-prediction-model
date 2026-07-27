@@ -1,0 +1,4 @@
+split,n_chips,n_rasteres,com_garimpo_pct,sem_garimpo_pct,pct_del_total
+test,17312,11,50.2,49.8,16.4
+train,71592,12,49.5,50.5,67.9
+val,16518,11,51.1,48.9,15.7

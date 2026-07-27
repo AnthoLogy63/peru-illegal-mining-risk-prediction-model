@@ -1,0 +1,5 @@
+timm_name,val_macro_f1_v1_raster,val_accuracy_v1_raster,val_macro_f1_v2_bloques,val_accuracy_v2_bloques,f1_delta_v2_menos_v1
+efficientnet_b0,0.7566,0.7609,0.809,0.8091,0.0524
+resnet50,0.767,0.7693,0.8074,0.8077,0.0404
+swin_tiny_patch4_window7_224,0.7536,0.7547,0.8093,0.8097,0.0557
+vit_tiny_patch16_224,0.7529,0.7606,0.8059,0.8059,0.053

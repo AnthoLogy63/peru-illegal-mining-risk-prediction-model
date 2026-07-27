@@ -1,0 +1,7 @@
+test,estado,detalle
+"1. Una celda, un split",OK,0 celdas de la rejilla reclamadas por más de un split
+2. Separación en las costuras,OK,"0 chips con vecino de otro split a menos de 2 chips (2,560 m)"
+3. Balance de clases entre splits,OK,prevalencia com_garimpo entre 49.5 % y 51.1 % (rango 1.6 pp)
+4. Cobertura de rásteres,OK,cada split cubre entre 11 y 12 de los 12 rásteres
+5. Tamaño de los splits,OK,desviación máxima respecto al objetivo 70/15/15: 2.1 pp
+6. Manifiestos disjuntos,OK,0 chips repetidos entre splits

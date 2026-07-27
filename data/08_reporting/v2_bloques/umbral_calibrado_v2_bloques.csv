@@ -1,0 +1,5 @@
+model,umbral_optimo_val,test_macro_f1_05,test_macro_f1_calibrado,ganancia_f1,precision_com_05,precision_com_calibrado,recall_com_05,recall_com_calibrado
+swin_tiny_patch4_window7_224,0.54,0.7897,0.7895,-0.0002,0.7866,0.8098,0.7972,0.7591
+efficientnet_b0,0.55,0.7744,0.7621,-0.0123,0.7846,0.8029,0.7589,0.6992
+resnet50,0.44,0.7465,0.757,0.0105,0.7906,0.7645,0.6763,0.7454
+vit_tiny_patch16_224,0.48,0.7363,0.7389,0.0026,0.7704,0.7565,0.6783,0.7082
