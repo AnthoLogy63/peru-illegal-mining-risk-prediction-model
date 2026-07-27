@@ -1,0 +1,20 @@
+test,estado,detalle
+0. Integridad de la geometría,OK,"0 chips sin split, 0 valores nulos en columnas de coordenadas"
+0b. Bounding boxes válidas,OK,0 bounding boxes degeneradas (xmax<=xmin o ymax<=ymin)
+1. Cada ráster en un único split,OK,los 12 rásteres pertenecen a un solo split
+2. Solapamiento entre rásteres,OK,ninguna pareja de rásteres comparte área; los que se tocan sólo comparten borde
+3. Centroides duplicados,OK,"0 centroides repetidos en ninguno de los niveles (6, 5, 4, 3)"
+3b. Rutas y bboxes duplicadas,OK,"0 rutas repetidas, 0 bounding boxes repetidas"
+4. Stride de la ventana deslizante,OK,paso == lado del chip; solape residual máximo 5.60e-12 m (ruido de coma flotante)
+4b. Barrido fila/columna dentro de cada ráster,OK,ningún par de chips consecutivos se solapa (residuo 0.00e+00 deg)
+5a. Alineación a rejilla global,OK,todos los chips encajan en una rejilla común (residuo 1.14e-12 celdas)
+5b. Colisiones en la rejilla global,OK,"cada una de las 111,584 celdas contiene exactamente 1 chip: no hay solapamiento posible"
+5c. Territorio compartido entre splits,OK,ninguna celda del territorio es reclamada por dos splits distintos
+5d. Cobertura del mosaico,OK,"el mosaico es denso y sin huecos (352x317 celdas = 111,584 chips)"
+6. Duplicados de píxeles (muestra),OK,"1,200 chips muestreados, todos con contenido distinto"
+7. Adyacencia entre splits en las costuras,AVISO,"1,616 chips (3.07% del split más afectado) tocan directamente otro split; no es duplicación, pero sí autocorrelación espacial en el borde"
+8. Partición train/val/test,OK,"los tres manifiestos son disjuntos, sin duplicados internos y cubren el 100% de los chips"
+9. Semántica de overlap_ratio,OK,overlap_ratio es la intersección con polígonos de garimpo y separa las clases con umbral ≈ 0.050; no mide solapamiento entre chips
+9b. Rango de overlap_ratio,AVISO,"6,201 chips con overlap_ratio > 1 (máx 3.31): los polígonos de garimpo se suman sin disolver, no invalida la etiqueta binaria"
+10. Existencia de los PNG (muestra),OK,"500 rutas muestreadas desde ..\data\01_raw\dataset_amazonia_garimpo_binario, 0 inexistentes"
+10b. Coherencia de rutas entre notebooks y src/,AVISO,solo existe la ruta de 'notebooks 01/03 y este'; create_dataloaders() apunta a otra carpeta

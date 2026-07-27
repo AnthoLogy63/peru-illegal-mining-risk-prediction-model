@@ -1,0 +1,32 @@
+{
+  "calculado_sobre": "manifest_train.csv",
+  "n_chips_muestreados": 3000,
+  "random_state": 42,
+  "DATASET_MEAN": [
+    0.0303,
+    0.0813,
+    0.0202
+  ],
+  "DATASET_STD": [
+    0.0831,
+    0.0541,
+    0.0382
+  ],
+  "P1": [
+    0.0,
+    0.0039,
+    0.0
+  ],
+  "P99": [
+    0.4235,
+    0.298,
+    0.1882
+  ],
+  "auc_brillo_sin_jitter": 0.5884,
+  "auc_brillo_con_jitter": 0.5923,
+  "auc_diff_ic95": [
+    -0.012,
+    0.0052
+  ],
+  "veredicto_colorjitter": "la diferencia NO es distinguible de cero: el jitter no degrada la señal de forma medible"
+}
