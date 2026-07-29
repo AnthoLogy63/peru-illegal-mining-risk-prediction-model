@@ -13,6 +13,7 @@ Modelo de producción: **ResNet-50**, corrida `v2_bloques_tuned`, split espacial
 ```text
 IA/
 ├── README.md
+├── main.py                      # pipeline completo: python main.py
 ├── conf/pyproject.toml          # dependencias y CLI garimpo
 ├── .gitignore
 │
@@ -131,17 +132,14 @@ Requiere `data/06_models/v2_bloques_tuned/resnet50_best.pt` en disco.
 ## Flujo del pipeline final
 
 ```text
-01_raw (chips PNG)
-    ↓
-06_split_bloques → 05_model_input/v2_bloques/
-    ↓
-03b (normalización) → 08_reporting/normalization_constants.json
-    ↓
-07c_train_bloques_tuned → 06_models/v2_bloques_tuned/
-    ↓
-08c_eval_bloques_tuned → 08_reporting/v2_bloques_tuned/
-    ↓
-garimpo / src.cli (inferencia producción)
+python main.py
+    │
+    ├─ split      → 06_split_bloques.ipynb → 05_model_input/v2_bloques/
+    ├─ normalize  → 03b → 08_reporting/normalization_constants.json
+    ├─ train      → src/models/train.py → 06_models/v2_bloques_tuned/
+    └─ evaluate   → src/models/evaluate.py → 08_reporting/v2_bloques_tuned/
+
+Inferencia: garimpo evaluate | predict-image | ...
 ```
 
 ---

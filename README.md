@@ -25,6 +25,7 @@ Documentación de arquitectura: [`docs/architecture.md`](docs/architecture.md)
 
 ```text
 IA/
+├── main.py                   # pipeline completo: python main.py
 ├── conf/pyproject.toml       # dependencias
 ├── data/
 │   ├── 01_raw/               # chips PNG + manifesto
@@ -61,7 +62,18 @@ Requiere Python ≥ 3.10. Para entrenamiento con GPU, instalar PyTorch con sopor
 
 ## Pipeline final (reproducir resultados)
 
-Ejecutar en orden desde `notebooks/`:
+**Un solo comando** (desde la raíz, con venv activado):
+
+```bash
+python main.py
+```
+
+Ejecuta en orden: split por bloques → normalización → entrenamiento (4 modelos) → evaluación en test.  
+Omite pasos cuyas salidas ya existen. Para forzar todo de nuevo: `python main.py --force`.
+
+Pasos individuales: `python main.py --step split|normalize|train|evaluate`
+
+Equivalente manual con notebooks:
 
 | Paso | Notebook | Salida |
 |------|----------|--------|

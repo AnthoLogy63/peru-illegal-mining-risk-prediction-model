@@ -1,10 +1,40 @@
-# Probar el pipeline de producción
-
-Guía para verificar que el proyecto funciona de punta a punta **sin reentrenar**: instalación, checkpoints, dataset y CLI `garimpo`.
+# Pipeline de garimpo
 
 Corrida de referencia: **`v2_bloques_tuned`** (split por bloques + normalización propia del dataset).
 
 ---
+
+## Ejecutar todo el pipeline (un comando)
+
+Desde la raíz del repo, con el venv activado y el dataset en `data/01_raw/`:
+
+```bash
+python main.py
+```
+
+Orden automático:
+
+1. **split** — notebook `06_split_bloques.ipynb` (si faltan manifiestos)
+2. **normalize** — notebook `03b_normalizacion_chips.ipynb` (si falta `normalization_constants.json`)
+3. **train** — entrena 4 modelos con `src/models/train.py`
+4. **evaluate** — evalúa todos los `.pt` en test y guarda CSV
+
+Opciones útiles:
+
+```bash
+python main.py --force              # rehacer todo aunque existan salidas
+python main.py --step train         # solo entrenar
+python main.py --skip-train         # split + norm + eval (checkpoints ya copiados)
+python main.py --skip-split --skip-normalize --skip-train   # solo evaluar
+```
+
+El entrenamiento requiere **GPU** y tarda horas. Los pasos split/normalize también pueden tardar (03b recorre el train set).
+
+---
+
+## Probar inferencia (checkpoints ya entrenados)
+
+Guía para verificar instalación, checkpoints copiados y CLI `garimpo` **sin reentrenar**.
 
 ## 1. Instalación
 
@@ -147,33 +177,8 @@ Métricas de referencia (test, corrida final): ver `data/08_reporting/v2_bloques
 
 ## 7. Reproducir entrenamiento completo (opcional)
 
-Si quieres regenerar checkpoints desde cero, ejecuta en orden los notebooks:
-
-1. `06_split_bloques.ipynb`
-2. `03b_normalizacion_chips.ipynb`
-3. `07c_train_bloques_tuned.ipynb`
-4. `08c_eval_bloques_tuned.ipynb`
-
-Detalle en [`README.md`](README.md) y [`docs/architecture.md`](docs/architecture.md).
-
----
-
-## 8. Demo en vivo (presentación)
-
-Para que el profesor elija un chip del dataset y lo clasifiques en clase:
-
-**Opción A — Notebook (recomendada, se ve la imagen y el resultado):**
-
-1. Abrir `notebooks/09_demo_inferencia_vivo.ipynb` en Jupyter.
-2. Kernel: el mismo venv donde hiciste `pip install -e conf/`.
-3. Ejecutar celdas 1 y 3 una vez (setup).
-4. En la celda **2**, cambiar `IMAGE_PATH` al PNG que elija el profesor.
-5. Ejecutar celdas 3–4: muestra el chip y la predicción.
-
-**Opción B — Terminal (más rápida, sin gráfico):**
-
 ```bash
-garimpo predict-image "data/01_raw/dataset_amazonia_garimpo_binario/com_garimpo/NOMBRE.png"
+python main.py
 ```
 
-Devuelve JSON con `label_name` y `prob_com_garimpo`.
+O notebook por notebook — ver [`README.md`](README.md) y [`docs/architecture.md`](docs/architecture.md).
