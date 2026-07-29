@@ -66,7 +66,7 @@ Copia los 4 modelos en:
 
 Ver lista exacta de archivos en [`data/06_models/v2_bloques_tuned/README.md`](data/06_models/v2_bloques_tuned/README.md).
 
-Mínimo para el CLI por defecto: **`resnet50_best.pt`**.
+Mínimo para inferencia rápida: **`resnet50_best.pt`**. Para la comparativa completa del paper: **los 4 `.pt`**.
 
 Comprobar que existen:
 
@@ -101,20 +101,26 @@ Si falta la carpeta de chips, descarga el dataset **Amazonia Garimpo Binario** y
 
 ## 4. Comandos de prueba
 
-Desde la raíz del repo, con el entorno activado y `resnet50_best.pt` en su sitio.
+Desde la raíz del repo, con el entorno activado y **los 4 `.pt`** en su sitio.
 
-### Evaluar en test (modelo de producción)
+### Evaluar los 4 modelos en test (comparativa del estudio)
+
+```bash
+garimpo evaluate-all --split test
+```
+
+Salida: JSON con las cuatro arquitecturas ordenadas por `test_macro_f1`. ResNet-50 ≈ **0.794**.
+
+### Evaluar solo ResNet-50 (producción)
 
 ```bash
 garimpo evaluate --split test
 ```
 
-Salida esperada (JSON): `macro_f1` ≈ **0.794**, `model_name`: `resnet50`.
-
-### Evaluar en val
+### Evaluar en val (los 4)
 
 ```bash
-garimpo evaluate --split val
+garimpo evaluate-all --split val
 ```
 
 ### Calibrar umbral y evaluar test
@@ -150,9 +156,9 @@ Equivalente sin entry point: `python -m src.cli <comando>`.
 | Paso | OK si… |
 |------|--------|
 | Instalación | `garimpo --help` muestra subcomandos |
-| Checkpoints | Existe al menos `resnet50_best.pt` |
+| Checkpoints | Existen los **4** `.pt` en `v2_bloques_tuned/` |
 | Dataset | La ruta de chips responde y hay PNGs |
-| `evaluate --split test` | JSON con `macro_f1` ~0.79 y sin error de archivo |
+| `evaluate-all --split test` | JSON con 4 modelos, ResNet macro F1 ~0.79 |
 | `predict-manifest` | Genera `preds_test.csv` con columnas de predicción |
 
 Métricas de referencia (test, corrida final): ver `data/08_reporting/v2_bloques_tuned/test_results_summary_v2_bloques_tuned.csv`.

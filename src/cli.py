@@ -1,4 +1,4 @@
-"""CLI mínima para evaluar y predecir con el modelo de producción."""
+"""CLI para evaluar, comparar los 4 modelos e inferir (v2_bloques_tuned)."""
 
 from __future__ import annotations
 
@@ -7,7 +7,11 @@ import json
 from pathlib import Path
 
 from src.config import DEFAULT_CHECKPOINT, DEFAULT_THRESHOLD
-from src.models.evaluate import calibrate_threshold, evaluate_production_model
+from src.models.evaluate import (
+    calibrate_threshold,
+    evaluate_all_models,
+    evaluate_production_model,
+)
 from src.models.predict import predict_image, predict_manifest
 from src.utils.helpers import get_device
 
@@ -71,9 +75,17 @@ def _cmd_predict_manifest(args: argparse.Namespace) -> None:
         print(df.head())
 
 
+def _cmd_evaluate_all(args: argparse.Namespace) -> None:
+    results = evaluate_all_models(
+        split=args.split,
+        threshold=args.threshold,
+    )
+    print(json.dumps(results, indent=2, ensure_ascii=False))
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Garimpo — modelo de producción ResNet-50 (v2_bloques_tuned)",
+        description="Garimpo — 4 arquitecturas v2_bloques_tuned (comparativa + inferencia)",
     )
     parser.add_argument(
         "--checkpoint",
@@ -90,7 +102,17 @@ def build_parser() -> argparse.ArgumentParser:
 
     sub = parser.add_subparsers(dest="command", required=True)
 
-    p_eval = sub.add_parser("evaluate", help="Evaluar checkpoint en val o test")
+    p_eval_all = sub.add_parser(
+        "evaluate-all",
+        help="Evaluar las 4 arquitecturas en val o test (comparativa del estudio)",
+    )
+    p_eval_all.add_argument("--split", choices=("val", "test"), default="test")
+    p_eval_all.set_defaults(func=_cmd_evaluate_all)
+
+    p_eval = sub.add_parser(
+        "evaluate",
+        help="Evaluar un checkpoint (default: ResNet-50 producción)",
+    )
     p_eval.add_argument("--split", choices=("val", "test"), default="test")
     p_eval.set_defaults(func=_cmd_evaluate)
 

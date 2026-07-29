@@ -157,3 +157,46 @@ def evaluate_production_model(
 
     loader = create_loader(split, batch_size=batch_size, shuffle=False)
     return evaluate_checkpoint(path, loader, threshold=threshold, device=device)
+
+
+def evaluate_all_models(
+    split: str = "test",
+    models_dir: Path | str | None = None,
+    threshold: float = DEFAULT_THRESHOLD,
+    batch_size: int = 32,
+    device: torch.device | None = None,
+) -> list[dict]:
+    """Evalúa las 4 arquitecturas del estudio sobre val o test."""
+    from src.config import MODELS_DIR, RUN_NAME, TRAINING_MODELS
+    from src.data.dataset import create_loader
+
+    root = Path(models_dir) if models_dir is not None else MODELS_DIR
+    device = device or get_device()
+    loader = create_loader(split, batch_size=batch_size, shuffle=False)
+
+    rows: list[dict] = []
+    for name in TRAINING_MODELS:
+        ckpt = root / f"{name}_best.pt"
+        if not ckpt.exists():
+            raise FileNotFoundError(f"Checkpoint no encontrado: {ckpt}")
+
+        result = evaluate_checkpoint(ckpt, loader, threshold=threshold, device=device)
+        rows.append(
+            {
+                "model": result["model_name"],
+                "variant": RUN_NAME,
+                "checkpoint": ckpt.name,
+                "train_best_epoch": result.get("train_best_epoch"),
+                "test_accuracy": round(result["accuracy"], 4),
+                "test_macro_f1": round(result["macro_f1"], 4),
+                "test_f1_com_garimpo": round(result["f1_com_garimpo"], 4),
+                "test_f1_sem_garimpo": round(result["f1_sem_garimpo"], 4),
+                "test_recall_com_garimpo": round(result["recall_com_garimpo"], 4),
+                "test_precision_com_garimpo": round(result["precision_com_garimpo"], 4),
+            }
+        )
+
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+
+    return sorted(rows, key=lambda r: r["test_macro_f1"], reverse=True)
