@@ -1,0 +1,5 @@
+timm_name,val_macro_f1_v2_bloques,val_accuracy_v2_bloques,val_macro_f1_v2_bloques_tuned,val_accuracy_v2_bloques_tuned,f1_delta_tuned_menos_baseline
+efficientnet_b0,0.809,0.8091,0.8141,0.8143,0.0051
+resnet50,0.8074,0.8077,0.8181,0.8183,0.0107
+swin_tiny_patch4_window7_224,0.8093,0.8097,0.8185,0.8199,0.0092
+vit_tiny_patch16_224,0.8059,0.8059,0.824,0.8242,0.0181

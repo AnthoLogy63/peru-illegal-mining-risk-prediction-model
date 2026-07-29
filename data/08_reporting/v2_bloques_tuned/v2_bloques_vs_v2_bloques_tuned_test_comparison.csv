@@ -1,0 +1,5 @@
+model,test_macro_f1_v2_bloques,precision_com_v2_bloques,recall_com_v2_bloques,test_macro_f1_v2_bloques_tuned,precision_com_v2_tuned,recall_com_v2_tuned,f1_delta_tuned_menos_baseline
+efficientnet_b0,0.7744,0.7846,0.7589,0.7666,0.8345,0.6724,-0.0078
+resnet50,0.7465,0.7906,0.6763,0.7938,0.8016,0.7829,0.0473
+swin_tiny_patch4_window7_224,0.7897,0.7866,0.7972,0.7667,0.7412,0.8248,-0.023
+vit_tiny_patch16_224,0.7363,0.7704,0.6783,0.775,0.7806,0.7674,0.0387

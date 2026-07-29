@@ -1,0 +1,43 @@
+EVALUACIÓN EN TEST (v2_bloques_tuned) — RESULTADOS
+Fecha: 2026-07-29 06:03
+Device: cuda | GPU: NVIDIA GeForce RTX 5060
+Manifiestos: C:\Users\luisg\OneDrive\Documentos\Universidad\7MO\IA\peru-illegal-mining-risk-prediction-model\data\05_model_input\v2_bloques
+Test chips: 17,312 (com_garimpo 50.2 %)
+Umbral de decisión: 0.5
+
+MODELO: efficientnet_b0 [v2_bloques_tuned] (efficientnet_b0_best.pt)
+  test accuracy: 0.7687
+  test macro F1: 0.7666
+  f1 com_garimpo: 0.7447 | f1 sem_garimpo: 0.7885
+  recall com_garimpo: 0.6724 | precision com_garimpo: 0.8345
+
+MODELO: resnet50 [v2_bloques_tuned] (resnet50_best.pt)
+  test accuracy: 0.7938
+  test macro F1: 0.7938
+  f1 com_garimpo: 0.7922 | f1 sem_garimpo: 0.7955
+  recall com_garimpo: 0.7829 | precision com_garimpo: 0.8016
+
+MODELO: swin_tiny_patch4_window7_224 [v2_bloques_tuned] (swin_tiny_patch4_window7_224_best.pt)
+  test accuracy: 0.7676
+  test macro F1: 0.7667
+  f1 com_garimpo: 0.7808 | f1 sem_garimpo: 0.7526
+  recall com_garimpo: 0.8248 | precision com_garimpo: 0.7412
+
+MODELO: vit_tiny_patch16_224 [v2_bloques_tuned] (vit_tiny_patch16_224_best.pt)
+  test accuracy: 0.7750
+  test macro F1: 0.7750
+  f1 com_garimpo: 0.7739 | f1 sem_garimpo: 0.7761
+  recall com_garimpo: 0.7674 | precision com_garimpo: 0.7806
+
+============================================================
+RESUMEN COMPARATIVO (test, v2_bloques_tuned)
+============================================================
+
+                       model          variant                           checkpoint  train_best_epoch  test_accuracy  test_macro_f1  test_f1_com_garimpo  test_f1_sem_garimpo  test_recall_com_garimpo  test_precision_com_garimpo
+                    resnet50 v2_bloques_tuned                     resnet50_best.pt                 9         0.7938         0.7938               0.7922               0.7955                   0.7829                      0.8016
+        vit_tiny_patch16_224 v2_bloques_tuned         vit_tiny_patch16_224_best.pt                 8         0.7750         0.7750               0.7739               0.7761                   0.7674                      0.7806
+swin_tiny_patch4_window7_224 v2_bloques_tuned swin_tiny_patch4_window7_224_best.pt                 2         0.7676         0.7667               0.7808               0.7526                   0.8248                      0.7412
+             efficientnet_b0 v2_bloques_tuned              efficientnet_b0_best.pt                 5         0.7687         0.7666               0.7447               0.7885                   0.6724                      0.8345
+
+MEJOR MODELO EN TEST: resnet50 | test macro F1 = 0.7938 | accuracy = 0.7938
+Checkpoint: resnet50_best.pt

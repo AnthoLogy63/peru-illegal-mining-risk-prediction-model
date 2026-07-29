@@ -1,0 +1,5 @@
+model,val_macro_f1,test_macro_f1,f1_drop_val_to_test,val_accuracy,test_accuracy
+resnet50,0.8181,0.7938,0.0243,0.8183,0.7938
+vit_tiny_patch16_224,0.824,0.775,0.049,0.8242,0.775
+swin_tiny_patch4_window7_224,0.8185,0.7667,0.0518,0.8199,0.7676
+efficientnet_b0,0.8141,0.7666,0.0475,0.8143,0.7687
