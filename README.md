@@ -1,138 +1,123 @@
-# Detección de Riesgo de Minería Ilegal en Perú usando IA y Datos Satelitales
+# Clasificación de minería ilegal (garimpo) en la Amazonía
 
-Proyecto de Data Science y análisis geoespacial enfocado en identificar zonas con alto riesgo de minería ilegal en Perú mediante inteligencia artificial, datos satelitales y fuentes oficiales ambientales.
+Proyecto de clasificación binaria de imágenes satelitales para detectar minería aluvial ilegal (*garimpo*) en la cuenca amazónica. Entrena y evalúa CNNs con Transfer Learning sobre el dataset público **Amazonia Garimpo Binario** (chips 128×128 RGB).
 
-El proyecto utiliza información de deforestación, cobertura forestal, concesiones mineras, accesibilidad territorial y alertas tempranas para construir modelos predictivos de riesgo geográfico.
+**Modelo de producción:** ResNet-50, corrida `v2_bloques_tuned`, test macro F1 ≈ **0.794**.
 
-# Tecnologías
-Actualmente el proyecto utiliza herramientas base del ecosistema de Data Science en Python.
+Documentación de arquitectura: [`docs/architecture.md`](docs/architecture.md)
 
-## Base
-- Python
-- Jupyter Notebook
-- Pandas
-- NumPy
-- Matplotlib
+---
 
-## Machine Learning
-- Scikit-learn
+## Stack
 
-## Geoespacial
-- GeoPandas
-- Rasterio
+| Área | Herramientas |
+|------|--------------|
+| Deep Learning | PyTorch, torchvision, timm |
+| Datos | Pandas, NumPy, Pillow |
+| Métricas | scikit-learn |
+| Notebooks | Jupyter |
+| Visualización | Matplotlib, Seaborn |
+| Geoespacial (EDA) | GeoPandas, OpenCV |
 
-# Estructura del Proyecto
+---
+
+## Estructura
 
 ```text
-mi-proyecto-ml/
-│
-├── README.md
-├── pyproject.toml
-├── .gitignore
-├── conf/
+IA/
+├── conf/pyproject.toml       # dependencias
 ├── data/
-├── notebooks/
-├── src/
-├── reports/
+│   ├── 01_raw/               # chips PNG + manifesto
+│   ├── 05_model_input/v2_bloques/   # manifiestos del split final
+│   ├── 06_models/v2_bloques_tuned/  # checkpoints .pt (gitignored)
+│   └── 08_reporting/         # métricas por corrida
+├── notebooks/                # pipeline reproducible
+├── src/                      # dataset, train, eval, predict, CLI
+├── reports/figures/          # figuras exportadas
+├── paper/                    # artículo (Typst)
 └── docs/
 ```
 
-La documentación detallada sobre arquitectura, estructura interna y organización del proyecto se encuentra en:
+---
 
-```text
-docs/architecture.md
-```
-
-# Instalación
-
-## 1. Clonar repositorio
+## Instalación
 
 ```bash
 git clone <URL_DEL_REPOSITORIO>
-cd mi-proyecto-ml
+cd IA
+
+python -m venv .venv
+# Windows
+.venv\Scripts\activate
+# Linux / Mac
+source .venv/bin/activate
+
+pip install -e conf/
 ```
 
-## 2. Crear entorno virtual
+Requiere Python ≥ 3.10. Para entrenamiento con GPU, instalar PyTorch con soporte CUDA según [pytorch.org](https://pytorch.org).
 
-### Windows
+---
+
+## Pipeline final (reproducir resultados)
+
+Ejecutar en orden desde `notebooks/`:
+
+| Paso | Notebook | Salida |
+|------|----------|--------|
+| 1 | `06_split_bloques.ipynb` | Manifiestos en `data/05_model_input/v2_bloques/` |
+| 2 | `03b_normalizacion_chips.ipynb` | `data/08_reporting/normalization_constants.json` |
+| 3 | `07c_train_bloques_tuned.ipynb` | Checkpoints en `data/06_models/v2_bloques_tuned/` |
+| 4 | `08c_eval_bloques_tuned.ipynb` | Métricas test en `data/08_reporting/v2_bloques_tuned/` |
+
+Los notebooks `07`/`08` (norm ImageNet) y `04_*`/`05_*` (split v1) se conservan como referencia histórica.
+
+---
+
+## Inferencia y prueba del pipeline
+
+Los checkpoints `.pt` no están en git. Copia los 4 modelos en `data/06_models/v2_bloques_tuned/` — ver [`data/06_models/v2_bloques_tuned/README.md`](data/06_models/v2_bloques_tuned/README.md).
+
+Guía paso a paso para probar instalación, checkpoints y CLI: [`PIPELINE.md`](PIPELINE.md).
 
 ```bash
-python -m venv venv
-venv\Scripts\activate
+garimpo evaluate --split test
+garimpo predict-image ruta/al/chip.png
+garimpo predict-manifest data/05_model_input/v2_bloques/manifest_test.csv -o preds.csv
+garimpo calibrate
 ```
 
-### Linux / Mac
+Equivalente: `python -m src.cli <comando>`.
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
+---
 
-## 3. Instalar dependencias
+## Dataset
 
-```bash
-pip install .
-```
+- **Amazonia Garimpo Binario** — ~111,584 chips 128×128, clases `com_garimpo` / `sem_garimpo`
+- Ubicación local: `data/01_raw/dataset_amazonia_garimpo_binario/`
+- Split final: espacial por bloques (~50/50 en train, val y test)
 
-# Ejecución
+---
 
-## Abrir notebooks
+## Resultados clave (v2_bloques_tuned, test)
 
-```bash
-jupyter notebook
-```
+| Modelo | Test macro F1 |
+|--------|---------------|
+| **ResNet-50** | **0.7938** |
+| ViT-tiny | 0.7750 |
+| EfficientNet-B0 | 0.7666 |
+| Swin-T | 0.7667 |
 
-## Ejecutar pipeline de features
+Detalle en `data/08_reporting/v2_bloques_tuned/test_results_summary_v2_bloques_tuned.csv`.
 
-```bash
-python src/pipelines/feature_pipeline.py
-```
+---
 
-## Ejecutar entrenamiento
+## Autores
 
-```bash
-python src/pipelines/training_pipeline.py
-```
+- Jeans Anthony Ajra Huacso
+- Paul Andree Cari Lipe
+- Fernando Miguel Garambel Marín
+- Luis Guillermo Luque Condori
+- Alexandra Raquel Quispe Arratea
 
-## Ejecutar inferencia
-
-```bash
-python src/pipelines/inference_pipeline.py
-```
-
-# Datos Utilizados
-
-El proyecto integra datasets provenientes de:
-
-- MINAM
-- Geobosques
-- INGEMMET
-- SERNANP
-- INEI
-- Sentinel-1
-- Sentinel-2
-- NICFI
-- Landsat
-
-# Estado del Proyecto
-
-🚧 En desarrollo.
-
-# Documentación
-
-La documentación técnica, reportes y análisis del proyecto se encuentran en:
-
-```text
-docs/
-reports/
-```
-
-# Autor
-
-- Ajra Huacso Jeans Anthony
-- Paul
-- Fernando
-- Alexandra
-- Luis
-
-Proyecto académico y de investigación orientado a análisis geoespacial, monitoreo ambiental y Machine Learning aplicado a minería ilegal en Perú.
+Proyecto académico — Universidad Nacional de San Agustín (UNSA).

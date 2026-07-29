@@ -1,7 +1,11 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "illegal-mining-risk-detection"
 version = "0.1.0"
-description = "Proyecto de Data Science y análisis geoespacial para detección de riesgo de minería ilegal en Perú."
+description = "Clasificación binaria de minería ilegal (garimpo) en la Amazonía con CNNs sobre el dataset Amazonia Garimpo Binario (Brasil)."
 requires-python = ">=3.10"
 
 dependencies = [
@@ -19,3 +23,10 @@ dependencies = [
     "pillow",
     "tqdm",
 ]
+
+[project.scripts]
+garimpo = "src.cli:main"
+
+[tool.setuptools.packages.find]
+where = [".."]
+include = ["src*"]

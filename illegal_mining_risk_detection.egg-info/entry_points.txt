@@ -1,0 +1,2 @@
+[console_scripts]
+garimpo = src.cli:main

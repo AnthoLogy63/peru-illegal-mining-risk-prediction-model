@@ -12,6 +12,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 
+from src.data.dataset import load_normalization_constants
 from src.utils.metrics import compute_metrics
 
 IMAGE_SIZE = 128
@@ -98,6 +99,7 @@ def train_model(
     lr: float = 1e-4,
     img_size: int = IMAGE_SIZE,
     pretrained: bool = True,
+    norm: str = "dataset",
 ) -> dict:
     """
     Entrena un modelo con early stopping sobre val macro F1.
@@ -125,6 +127,12 @@ def train_model(
 
     ckpt_path = save_dir / f"{model_name}_best.pt"
     history_path = save_dir / f"{model_name}_history.json"
+
+    norm_meta: dict = {"norm": norm}
+    if norm == "dataset":
+        mean, std = load_normalization_constants()
+        norm_meta["dataset_mean"] = list(mean)
+        norm_meta["dataset_std"] = list(std)
 
     print(f"Entrenando {model_name} en {device}" + (" (AMP activado)" if scaler is not None else ""))
     print(f"Train: {len(train_loader.dataset):,} | Val: {len(val_loader.dataset):,}")
@@ -171,6 +179,7 @@ def train_model(
                     "model_state_dict": model.state_dict(),
                     "val_metrics": val_metrics,
                     "img_size": img_size,
+                    **norm_meta,
                 },
                 ckpt_path,
             )
