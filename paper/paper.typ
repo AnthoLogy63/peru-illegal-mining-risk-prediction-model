@@ -157,7 +157,7 @@ Si se observa el conjunto de los doce trabajos revisados, el monitoreo satelital
 
 La extracción ilegal de minerales en ríos, comúnmente conocida como garimpo, provoca un cambio drástico y permanente en la estructura ecológica del bosque amazónico @loboMappingMiningAreas2018. La técnica de extracción mecánica requiere la eliminación completa de la vegetación del bosque, la remoción intensiva de la capa superior del suelo y la creación de estanques artificiales para sedimentos de desechos. Estas actividades generan metales pesados extremadamente dañinos, principalmente mercurio, de forma directa en las cuencas cercanas @pestanaLetsTalkMercury2022. La contaminación química del agua impacta drásticamente en la biodiversidad de los ecosistemas acuáticos y afecta los medios de vida y la salud de las comunidades que viven a la orilla @crespo-lopezMercuryAmazonDanger2023.
 
-La eliminación de la vegetación y la creación de cuerpos de agua turbios alteran de manera significativa la reflectancia electromagnética del suelo. Este cambio produce señales ópticas únicas que los sensores satelitales multiespectrales detectan con alta precisión en resolución geométrica y radiométrica desde el espacio @TwentyYearsLand2020.La detección remota por medio de óptica permite controlar cambios significativos en el hábitat tropical en grandes territorios que son complicados de acceder a pie @monacoImprovingWildfireSeverity2020. Así, la supervisión constante desde satélites se vuelve la estrategia más eficiente para rastrear y evaluar transformaciones ecológicas en la región amazónica @camalanChangeDetectionAmazonian202
+La eliminación de la vegetación y la creación de cuerpos de agua turbios alteran de manera significativa la reflectancia electromagnética del suelo. Este cambio produce señales ópticas únicas que los sensores satelitales multiespectrales detectan con alta precisión en resolución geométrica y radiométrica desde el espacio @TwentyYearsLand2020. La detección remota por medio de óptica permite controlar cambios significativos en el hábitat tropical en grandes territorios que son complicados de acceder a pie @monacoImprovingWildfireSeverity2020. Así, la supervisión constante desde satélites se vuelve la estrategia más eficiente para rastrear y evaluar transformaciones ecológicas en la región amazónica @camalanChangeDetectionAmazonian2022c.
 
 La interpretación visual y el análisis manual de imágenes satelitales son difíciles de poner en práctica debido a la gran extensión y la complejidad de la selva amazónica. Para llevar a cabo este tipo de análisis de manera automatizada a gran escala, la inteligencia artificial utiliza el método de aprendizaje supervisado en el ámbito de la visión computacional @silvaAutomatedDetectionAnalysis2023. Los modelos algorítmicos trabajan con matrices numéricas de píxeles etiquetadas previamente para extraer e identificar patrones visuales muy complejos que no pueden ser detectados a simple vista @nieThreedimensionalIntelligentMonitoring2024. Este enfoque computacional convierte grandes volúmenes de datos en sistemas capaces de alertar anticipadamente sobre la deforestación aluvial @sairerimachiDeteccionDeforestacionPor2024.
 
@@ -326,107 +326,108 @@ Para salvaguardar la capacidad de generalización en datos satelitales ciegos, e
 
 = 4. Resultados
 
-Esta sección evalúa el rendimiento del modelo ResNet-50 frente a baselines comparativos sobre el conjunto de validación de 11,158 imágenes.
+Esta sección evalúa el rendimiento de las cuatro arquitecturas (ResNet-50, EfficientNet-B0, Swin-T y ViT-tiny) sobre el conjunto de prueba de la corrida v2_bloques_tuned: 17,312 chips (50.2% com_garimpo), evaluados con umbral de decisión 0.5. A diferencia de la corrida inicial, el split train/val/test aquí no se hizo por chip individual ni por ráster completo, sino por bloques espaciales de 32×32 celdas con un buffer de 2 chips en las costuras entre bloques de distinto split, para evitar que la cercanía geográfica entre chips vecinos infle las métricas (ver Sección 3.3 para el detalle metodológico del split). Además, los cuatro modelos se entrenaron con normalización propia del dataset —calculada sobre los valores reales de intensidad de los chips amazónicos— en lugar de la normalización estándar de ImageNet.
 
 == 4.1 Desempeño Comparativo
-La @tabla-resultados-finales resume las métricas obtenidas tras 14 épocas de entrenamiento con Early Stopping.
+
+La @tabla-resultados-finales resume las métricas de test de las cuatro arquitecturas.
 
 #figure(
   table(
-    columns: (auto, auto, auto, auto, auto),
+    columns: (auto, auto, auto, auto, auto, auto, auto),
     align: center,
     inset: 5pt,
-    table.header([*Modelo*], [*Accuracy*], [*F1-Score Macro*], [*Recall*], [*Épocas*]),
-    [*ResNet-50*], [76.27%], [76.19%], [77.85%], [9],
-    [EfficientNet-B0], [74.91%], [74.89%], [80.40%], [8],
-    [Swin Transformer], [74.56%], [74.56%], [83.77%], [7],
-    [ViT-Tiny], [72.80%], [72.31%], [65.64%], [1],
+    table.header([*Modelo*], [*Test Accuracy*], [*Test Macro F1*], [*F1 com_garimpo*], [*F1 sem_garimpo*], [*Recall com_garimpo*], [*Precision com_garimpo*]),
+    [*ResNet-50*], [79.38%], [0.7938], [0.7922], [0.7955], [78.29%], [80.16%],
+    [ViT-tiny], [77.50%], [0.7750], [0.7739], [0.7761], [76.74%], [78.06%],
+    [Swin-T], [76.76%], [0.7667], [0.7808], [0.7526], [82.48%], [74.12%],
+    [EfficientNet-B0], [76.87%], [0.7666], [0.7447], [0.7885], [67.24%], [83.45%],
   ),
-  caption: [Métricas de validación de arquitecturas evaluadas.],
+  caption: [Métricas de test de arquitecturas evaluadas (v2_bloques_tuned).],
 ) <tabla-resultados-finales>
 
-#figure(
-  image("figures/resnet50_training_curves.png", width: 95%),
-  caption: [Curvas de entrenamiento (Loss y F1-Score) del modelo ResNet-50 preentrenado.],
-) <fig-training-curves>
-
-== 4.2 Impacto del Transfer Learning
-El uso de pesos preentrenados en ImageNet fue determinante para la convergencia. El Swin Transformer sin preentrenamiento resultó en un colapso del aprendizaje (F1=0.3118), comparado con 0.7456 tras Transfer Learning. ResNet-50, nuestra arquitectura central, demostró estabilidad y una mejora neta de 1.57 puntos en F1.
+ResNet-50 fue el mejor modelo en el conjunto de prueba, con un F1 macro de 0.7938 y una exactitud de 79.38%. La @fig-precision-recall muestra las curvas precisión-recall de los cuatro modelos sobre test, donde se aprecia que EfficientNet-B0 y ResNet-50 dominan la mayor parte de la curva, mientras que Swin-T sacrifica precisión a cambio de un recall más agresivo.
 
 #figure(
-  table(
-    columns: (auto, auto, auto),
-    align: center,
-    inset: 6pt,
-    table.header([*Etiqueta Real*], [*Pred. sem_garimpo*], [*Pred. com_garimpo*]),
-    [*sem_garimpo*], [4,169], [1,410],
-    [*com_garimpo*], [1,236], [4,343],
-  ),
-  caption: [Matriz de confusión (ResNet-50, $N=11,158$).],
-) <matriz-conf>
+  image("figures/v2_bloques_tuned_precision_recall.png", width: 95%),
+  caption: [Curvas de precisión-recall sobre el conjunto de test (v2_bloques_tuned).],
+) <fig-precision-recall>
 
-== 4.3 Ablación y Análisis de Errores
-
-Para aislar matemáticamente y validar el impacto directo de las técnicas de regularización propuestas, se diseñó un estudio de ablación exhaustivo. Un estudio de ablación consiste en remover o desactivar componentes algorítmicos individuales del pipeline original y re-entrenar el modelo completo desde cero para cuantificar la degradación relativa del rendimiento global. 
-
-En este experimento riguroso, el modelo ResNet-50 se evaluó bajo cuatro configuraciones distintas:
-1. *Pipeline Completo:* Con preentrenamiento en ImageNet y aumento de datos estocástico dinámico (Configuración Propuesta).
-2. *Sin Aumento de Datos:* Pipeline completo desactivando exclusivamente las operaciones espaciales de rotación, escalado e inversión horizontal.
-3. *Sin Transfer Learning:* Pesos inicializados de forma aleatoria (distribución de Glorot uniforme), pero manteniendo el aumento de datos dinámico.
-4. *Modelo Básico Puro:* Sin preentrenamiento y sin operaciones de aumento de datos.
-
-La @tabla-ablacion resume las variaciones de rendimiento provocadas por la eliminación de componentes. Los resultados empíricos confirman abrumadoramente que el Transfer Learning (preentrenamiento) es el factor dominante para la convergencia en el dominio de detección satelital amazónica, sumando 24.31 puntos porcentuales netos al F1 Macro. El Aumento de Datos (*Data Augmentation*) añade 2.65 puntos adicionales al F1, previniendo efectivamente que el modelo memorize el ruido espacial de entrenamiento y mejorando la capacidad de generalización sobre parches nunca vistos.
+Un resultado que vale la pena señalar es que este orden no coincide con el de validación: durante el entrenamiento (@tabla-validacion), ViT-tiny fue el modelo con mejor F1 macro en validación (0.8240), seguido de cerca por Swin-T (0.8185) y ResNet-50 (0.8181). En test, sin embargo, ResNet-50 pasa al primer lugar y ViT-tiny cae al segundo. Esto sugiere que ResNet-50 generaliza mejor a bloques geográficos completamente nuevos que los transformers evaluados, que parecen ajustarse algo más a las particularidades de los bloques de validación. Es justamente el tipo de diferencia que un split por chip aleatorio —donde train y val comparten vecinos— no dejaría ver.
 
 #figure(
   table(
-    columns: (auto, auto, auto, auto, auto),
+    columns: (auto, auto, auto, auto, auto, auto),
     align: center,
-    inset: 6pt,
-    table.header([*Configuración Experimental*], [*Accuracy*], [*F1-Score*], [*Recall*], [*Diferencia F1*]),
-    [*Pipeline Completo Propuesto*], [*76.27%*], [*76.19%*], [*77.85%*], [*Referencia base*],
-    [Sin Aumento de Datos], [73.51%], [73.54%], [74.12%], [-2.65 p.p.],
-    [Sin Transfer Learning], [51.22%], [51.88%], [48.65%], [-24.31 p.p.],
-    [Modelo Básico Puro], [49.85%], [49.50%], [45.10%], [-26.69 p.p.],
+    inset: 5pt,
+    table.header([*Modelo*], [*Época óptima*], [*Épocas corridas*], [*Val Macro F1*], [*Val Accuracy*], [*Val Recall com_garimpo*]),
+    [ViT-tiny], [8], [15], [0.8240], [82.42%], [83.81%],
+    [Swin-T], [2], [9], [0.8185], [81.99%], [88.83%],
+    [ResNet-50], [9], [16], [0.8181], [81.83%], [82.93%],
+    [EfficientNet-B0], [5], [12], [0.8141], [81.43%], [76.07%],
   ),
-  caption: [Estudio de ablación sobre el impacto individual del preentrenamiento y las transformaciones espaciales.],
-) <tabla-ablacion>
+  caption: [Resumen de validación durante el entrenamiento (v2_bloques_tuned).],
+) <tabla-validacion>
 
-*Análisis Geométrico de Errores:*
+El entrenamiento se hizo con lote de 32, un máximo de 30 épocas y Early Stopping con paciencia de 7; ResNet-50 y EfficientNet-B0 usaron una tasa de aprendizaje de $10^{-4}$, mientras que los dos transformers (Swin-T y ViT-tiny) usaron $3 times 10^{-5}$, siguiendo la práctica habitual de tasas más bajas para arquitecturas basadas en atención preentrenadas.
 
-La matriz de confusión muestra que el sistema clasificó erróneamente 1,410 parches intactos como zonas de minería ilegal (Falsos Positivos o errores de Tipo I). Para entender de dónde vienen estos errores, se extrajo una submuestra aleatoria de 200 Falsos Positivos con probabilidad predicha superior a 0.85 (es decir, casos donde el modelo estaba muy seguro pero se equivocó) y se revisaron manualmente sobre las imágenes originales.
+== 4.2 Resultados por Arquitectura
 
-Más del 82% de estas falsas alarmas resultaron corresponder a formaciones ecológicas naturales cuya firma óptica es prácticamente idéntica a la de las cicatrices del garimpo aluvial, lo que explica por qué el modelo las confunde con tanta frecuencia. El caso más común son los bancos de arena estacionales: durante la época seca amazónica, el descenso del caudal de los ríos deja expuestas playas de arena blanca reflectante que, vistas desde el satélite, tienen una geometría muy parecida a la de los sedimentos removidos por la minería. Un patrón similar ocurre con los ríos de alta turbidez, donde la carga natural de sedimentos en suspensión satura el canal rojo (Red Band) de las imágenes Sentinel-2 casi igual que lo haría el agua de una poza de relaves. Y en menor medida aparecen también los claros naturales por caída de árboles, es decir, zonas donde tormentas de viento u otras dinámicas ecológicas rompen la continuidad del dosel arbóreo sin que haya intervención humana de por medio.
-
-En conjunto, estos casos dejan en evidencia que trabajar solo con información espectral visible-infrarroja tiene un límite: sin el apoyo de modelos digitales de elevación o de series temporales multianuales, el modelo no tiene forma de distinguir una alteración natural de una minera cuando ambas se ven igual desde arriba.
-
-== 4.5 Efecto del Hiperparámetro de Tamaño de Lote (Batch Size)
-
-La estabilidad del descenso del gradiente en modelos de alta profundidad estructural está intrínsecamente ligada al hiperparámetro de tamaño de lote (*batch size*). Un lote excesivamente masivo reduce drásticamente el ruido estocástico del cálculo del gradiente, pero puede causar que la función de optimización quede irreparablemente atrapada en mínimos locales subóptimos de la hiper-superficie de pérdida. Por el contrario, un lote minúsculo inyecta ruido excesivo, impidiendo la convergencia asintótica estable.
-
-Se ejecutó un barrido de hiperparámetros entrenando modelos idénticos utilizando tamaños de lote $B in {16, 32, 64, 128}$. El lote de $B=32$ demostró proporcionar el equilibrio matemático óptimo entre tiempo computacional por época y ruido estocástico de gradiente, alcanzando el máximo Recall de 77.85%. Tamaños mayores ($B=128$) colapsaron prematuramente la convergencia asintótica en la época 4 debido al fenómeno de barrido del gradiente (*gradient plateauing*).
-
-== 4.6 Resultados Gráficos Extendidos
-
-Para documentar visualmente el comportamiento analítico del modelo y respaldar las métricas reportadas, se presentan las gráficas extendidas de rendimiento. La matriz de confusión, ilustrada en la @fig-confusion-heatmap, evidencia un sesgo positivo hacia la detección de garimpo activo.
+*ResNet-50.* Es el modelo adoptado como línea de producción. Convergió en la época 9 de 16 corridas antes de que Early Stopping interrumpiera el entrenamiento. Sus curvas de entrenamiento (@fig-resnet-curves) muestran un loss de validación relativamente estable después de la época 6, sin señales fuertes de sobreajuste hacia el final. La matriz de confusión en test (@fig-resnet-conf) muestra 6,941 verdaderos negativos, 1,683 falsos positivos, 1,886 falsos negativos y 6,802 verdaderos positivos.
 
 #figure(
-  image("figures/confusion_matrix.png", width: 95%),
-  caption: [Heatmap de la matriz de confusión sobre el conjunto de validación de 11,158 imágenes, detallando los Falsos Positivos y Falsos Negativos.],
-) <fig-confusion-heatmap>
-
-El rendimiento de discriminación de la arquitectura ResNet-50 es capturado en la Curva ROC (Receiver Operating Characteristic), expuesta en la @fig-roc-curve. La curva mapea la tasa de Verdaderos Positivos (Sensibilidad) contra la tasa de Falsos Positivos (1 - Especificidad) a diferentes umbrales de clasificación probabilística.
+  image("figures/resnet50_v2_bloques_tuned_training_curves.png", width: 95%),
+  caption: [Curvas de entrenamiento de ResNet-50.],
+) <fig-resnet-curves>
 
 #figure(
-  image("figures/roc_curve.png", width: 95%),
-  caption: [Curva ROC del clasificador binario [@naushadDeepTransferLearning2021, @richardsonReceiverOperatingCharacteristic2024, @ChangeDetectionAmazonian, @wangEvaluatingFeasibilityIllegal2020, @couttenierMappingArtisanalSmallscale2022, @ferreiranetoUncontrolledIllegalMining2024, @fonsecaEnhancedDetectionArtisanal2024, @gersonAmazonForestsCapture2022, @shahComparingInceptionV32023, @adegunReviewDeepLearning2023, @cotolanApplicabilityPretrainedCNNs2024, @qinSpatialSpectralAssociativeContrastiveLearning2023]. El área bajo la curva (AUC) demuestra una separación óptima entre las clases de bosque sano y minería aluvial.],
-) <fig-roc-curve>
+  image("figures/resnet50_v2_bloques_tuned_test_confusion.png", width: 85%),
+  caption: [Matriz de confusión de ResNet-50 en test.],
+) <fig-resnet-conf>
 
-Finalmente, la dinámica de convergencia fue estabilizada mediante una función de decaimiento exponencial estricto sobre la tasa de aprendizaje del optimizador Adam. La @fig-lr-decay proyecta la disminución del hiperparámetro a lo largo de las 14 épocas de entrenamiento.
+*ViT-tiny.* Fue el mejor modelo en validación pero el segundo en test. Convergió en la época 8 de 15. Su matriz de confusión en test (@fig-vit-conf) muestra un patrón parecido al de ResNet-50 pero ligeramente peor en ambos frentes: 6,750 verdaderos negativos, 1,874 falsos positivos, 2,021 falsos negativos y 6,667 verdaderos positivos.
 
 #figure(
-  image("figures/lr_decay.png", width: 95%),
-  caption: [Decaimiento exponencial de la tasa de aprendizaje (Learning Rate) para evitar el sobrepaso de mínimos globales en etapas avanzadas de optimización.],
-) <fig-lr-decay>
+  image("figures/vit_tiny_patch16_224_v2_bloques_tuned_training_curves.png", width: 95%),
+  caption: [Curvas de entrenamiento de ViT-tiny.],
+) <fig-vit-curves>
+
+#figure(
+  image("figures/vit_tiny_patch16_224_v2_bloques_tuned_test_confusion.png", width: 85%),
+  caption: [Matriz de confusión de ViT-tiny en test.],
+) <fig-vit-conf>
+
+*Swin-T.* Es el caso más interesante de la corrida: convergió muy rápido, en solo la época 2 de 9, y muestra el recall más alto de los cuatro modelos en test (82.48%), a costa de la precisión más baja (74.12%). Su matriz de confusión (@fig-swin-conf) confirma este sesgo hacia sobre-detectar garimpo: 6,122 verdaderos negativos, 2,502 falsos positivos, 1,522 falsos negativos y 7,166 verdaderos positivos. Es el modelo más "alarmista" de los cuatro, y probablemente el más adecuado si el objetivo fuera minimizar estrictamente los falsos negativos, aunque eso implique más carga de verificación manual para los analistas.
+
+#figure(
+  image("figures/swin_tiny_patch4_window7_224_v2_bloques_tuned_training_curves.png", width: 95%),
+  caption: [Curvas de entrenamiento de Swin-T.],
+) <fig-swin-curves>
+
+#figure(
+  image("figures/swin_tiny_patch4_window7_224_v2_bloques_tuned_test_confusion.png", width: 85%),
+  caption: [Matriz de confusión de Swin-T en test.],
+) <fig-swin-conf>
+
+*EfficientNet-B0.* Es el caso opuesto: el modelo más conservador, con el recall más bajo (67.24%) y la precisión más alta (83.45%) del grupo. Convergió en la época 5 de 12. Su matriz de confusión (@fig-eff-conf) tiene la mayor cantidad de falsos negativos de las cuatro arquitecturas: 7,465 verdaderos negativos, 1,159 falsos positivos, 2,846 falsos negativos y 5,842 verdaderos positivos. En el contexto de fiscalización ambiental, este es el comportamiento menos deseable de los cuatro, porque casi el 33% de los focos reales de garimpo en test no fueron detectados.
+
+#figure(
+  image("figures/efficientnet_b0_v2_bloques_tuned_training_curves.png", width: 95%),
+  caption: [Curvas de entrenamiento de EfficientNet-B0.],
+) <fig-eff-curves>
+
+#figure(
+  image("figures/efficientnet_b0_v2_bloques_tuned_test_confusion.png", width: 85%),
+  caption: [Matriz de confusión de EfficientNet-B0 en test.],
+) <fig-eff-conf>
+
+== 4.3 Análisis de Errores (ResNet-50)
+
+Centrándonos en el modelo de producción, ResNet-50 se equivocó en 3,569 de los 17,312 chips de test (20.62%), repartidos en 1,683 falsos positivos y 1,886 falsos negativos. El recall de garimpo llegó a 78.29%, lo que en términos prácticos significa que el sistema detecta correctamente cerca de 8 de cada 10 focos reales de minería ilegal sin intervención humana; los otros 2 quedarían sin marcar y dependerían de otras fuentes de vigilancia para ser detectados.
+
+A diferencia de la corrida anterior sobre el split por ráster —donde los falsos positivos superaban claramente a los falsos negativos—, aquí el patrón se invierte ligeramente: hay algo más de falsos negativos (1,886) que de falsos positivos (1,683). Esto es consistente con un modelo algo más conservador que el de la corrida anterior, posiblemente porque el split por bloques, al eliminar la fuga espacial entre train y test, le quita al modelo la posibilidad de apoyarse en contexto geográfico compartido para "adivinar" correctamente parches ambiguos.
+
+No se repitió, sobre este split, la revisión manual con muestra aleatoria de falsos positivos que se hizo en la corrida anterior. Dado que el dominio de la imagen no cambió —siguen siendo chips ópticos Sentinel-2 sobre el mismo territorio—, es razonable asumir que las mismas fuentes de confusión espectral identificadas entonces (bancos de arena estacionales en época seca, ríos con alta turbidez que saturan el canal rojo, y claros naturales por caída de árboles) siguen siendo las explicaciones más plausibles del error residual, aunque esto queda como una hipótesis heredada y no como un hallazgo verificado sobre los datos de esta corrida.
 
 // ============================================================
 // SECCIÓN 5: DISCUSIÓN
@@ -436,11 +437,13 @@ Finalmente, la dinámica de convergencia fue estabilizada mediante una función 
 
 == 5.1 Interpretación de Resultados
 
-El modelo ResNet-50 con Transfer Learning desde ImageNet alcanza un F1 Macro del 76.19% y un Recall del 77.85% para la clase com_garimpo sobre el conjunto de validación. La métrica prioritaria en el dominio de monitoreo ambiental es el Recall, porque cada Falso Negativo representa un foco de garimpo activo que el sistema no detecta. En el contexto del control territorial amazónico, dejar pasar una mina ilegal implica daño ecológico difícil de revertir por vertido de mercurio y deforestación @gersonAmazonForestsCapture2022, mientras que un Falso Positivo simplemente requiere que un analista lo verifique después. El sistema detecta correctamente 4,343 de los 5,579 focos reales del conjunto de validación, operando sobre imágenes satelitales sin intervención humana.
+El modelo de producción, ResNet-50, alcanza un F1 macro de 0.7938 y un recall de 78.29% para la clase com_garimpo sobre un conjunto de prueba de 17,312 chips completamente aislado por bloques geográficos del conjunto de entrenamiento. Como se discutió en la Sección 4, el recall sigue siendo la métrica prioritaria en este dominio: cada falso negativo es un foco de garimpo activo que el sistema no marca, mientras que un falso positivo solo le cuesta al analista una verificación adicional.
+
+Un hallazgo relevante de esta corrida es el papel de la normalización. En una corrida previa sobre el mismo split por bloques pero usando la normalización estándar de ImageNet, el mejor modelo en test fue Swin-T, con un F1 macro de 0.7897. Al sustituir esa normalización por una calculada directamente sobre la distribución real de colores de los chips amazónicos —que resultaron ser considerablemente más oscuros que las imágenes de ImageNet—, ResNet-50 pasó a ser el mejor modelo, con un F1 macro de 0.7938. Esto sugiere que, al menos para esta arquitectura, ajustar el preprocesamiento al dominio específico del dataset tuvo más impacto que la elección de la arquitectura en sí, y es consistente con la intuición de que los rangos dinámicos de reflectancia de la selva amazónica no se parecen a los de las fotografías cotidianas sobre las que se preentrena ImageNet.
 
 == 5.2 Comparación Cuantitativa con Trabajos Relacionados
 
-La @tabla-comparacion-literatura contrasta el Recall de detección de garimpo o minería artesanal obtenido en este estudio frente a los trabajos de mayor relevancia.
+La @tabla-comparacion-literatura actualiza la comparación de recall/F1 frente a los trabajos de mayor relevancia, usando ahora los resultados de test de la corrida v2_bloques_tuned.
 
 #figure(
   table(
@@ -450,19 +453,24 @@ La @tabla-comparacion-literatura contrasta el Recall de detección de garimpo o 
     table.header(
       [*Trabajo*], [*Contexto*], [*Recall / F1*], [*Diferencia Recall*]
     ),
-    [*Este trabajo (ResNet-50)*], [*Amazonía, 111K imgs*], [*77.85%*], [*referencia*],
-    [Couttenier (2022) @couttenierMappingArtisanalSmallscale2022], [África, 1.75M km²], [42.0%], [+35.85 p.p.],
-    [Lemes Neto (2026) @lemesnetoSARBasedMonitoringIllegal2026], [Amazonía SAR], [F1=63.0--67.6%], [+10.25 p.p. F1],
-    [Pasanisi (2025) @pasanisiUsingHighResolutionSatellite2025], [Congo, fusión], [F1=73.0%], [+3.19 p.p. F1],
-    [Camalan (2022) @camalanChangeDetectionAmazonian2022c], [MDD Perú, 6ch], [F1=88.0%], [-10.15 p.p. F1],
-    [Grupioni (2026) @grupioniDeteccaoGarimpoNa2026], [Mismo dataset], [Acc=85.92%], [-9.65 p.p. Acc],
+    [*Este trabajo (ResNet-50)*], [*Amazonía, 17.3K test*], [*78.29% recall*], [*referencia*],
+    [Couttenier (2022) @couttenierMappingArtisanalSmallscale2022], [África, 1.75M km²], [42.0% recall], [+36.29 p.p.],
+    [Lemes Neto (2026) @lemesnetoSARBasedMonitoringIllegal2026], [Amazonía SAR], [F1=63.0--67.6%], [+14.08 p.p. F1],
+    [Pasanisi (2025) @pasanisiUsingHighResolutionSatellite2025], [Congo, fusión], [F1=73.0%], [+6.38 p.p. F1],
+    [Camalan (2022) @camalanChangeDetectionAmazonian2022c], [MDD Perú, 6ch], [F1=88.0%], [-8.62 p.p. F1],
+    [Grupioni (2026) @grupioniDeteccaoGarimpoNa2026], [Mismo dataset], [Acc=85.92%], [-6.54 p.p. Acc],
   ),
-  caption: [Comparación cuantitativa del Recall y F1-Score.],
+  caption: [Comparación cuantitativa del Recall y F1-Score (actualizada).],
 ) <tabla-comparacion-literatura>
+
+La comparación más importante de toda esta tabla es la última fila, contra el propio trabajo de referencia del dataset. Grupioni et al. reportan 85.92% de accuracy, casi 6.5 puntos por encima de nuestro 79.38%. La diferencia, sin embargo, no debería leerse como que nuestro modelo es peor: viene principalmente de cómo se particionó el conjunto de prueba en cada caso. Grupioni et al. usan un split aleatorio por chip, donde chips vecinos —que comparten la misma cuenca, la misma cobertura de nubes del mosaico y, en muchos casos, literalmente la misma franja de terreno vista desde ángulos ligeramente distintos— pueden terminar uno en train y su vecino en test. Eso le da al modelo una oportunidad de "memorizar" el contexto geográfico local en vez de aprender a generalizar a territorio nunca visto, lo cual infla artificialmente el accuracy reportado.
+
+El split por bloques que usamos aquí —bloques completos de 32×32 celdas repartidos entre train/val/test, con un buffer de descarte en las costuras— elimina esa fuga de información. El resultado es un número más bajo, pero también más honesto: es la estimación más cercana a lo que se puede esperar si este modelo se despliega sobre un tramo de selva que el modelo jamás vio durante el entrenamiento, que es exactamente el escenario de uso real de un sistema de alerta temprana.
 
 == 5.3 Limitaciones del Modelo
 
-El modelo presenta tres limitaciones que conviene tener en cuenta antes de pensar en un despliegue operativo. La primera es la confusión espectral ya descrita en la sección anterior: los Falsos Positivos se concentran sobre todo en ríos turbios y bancos de arena, no en errores aleatorios. La segunda es su dependencia de imágenes ópticas, que lo deja ciego durante la temporada de nubes densas; resolver esto probablemente requiera integrar datos de radar SAR, como se discute en @lemesnetoSARBasedMonitoringIllegal2026. La tercera es que el entrenamiento se detuvo relativamente pronto (época 9 por Early Stopping); es razonable pensar que extender el entrenamiento, como hicieron @grupioniDeteccaoGarimpoNa2026 con más de 100 épocas, ayudaría a acercar el accuracy actual al 85% reportado en ese trabajo.
+El modelo conserva limitaciones que conviene tener en cuenta antes de pensar en un despliegue operativo. La primera es la confusión espectral con formaciones naturales similares a las cicatrices del garimpo, descrita en la Sección 4.3; aunque no se re-auditó específicamente sobre este split, no hay razón para pensar que el fenómeno haya desaparecido, dado que sigue habiendo 1,683 falsos positivos y 1,886 falsos negativos en test. La segunda es la dependencia exclusiva de imágenes ópticas, que deja al sistema ciego durante la temporada de nubes densas; resolver esto probablemente requiera integrar datos de radar SAR, como se discute en @lemesnetoSARBasedMonitoringIllegal2026. La tercera es que, incluso con un presupuesto de hasta 30 épocas y una paciencia de 7 para el Early Stopping, ResNet-50 volvió a converger temprano —en la época 9, igual que en la corrida anterior—, lo que sugiere que el techo de esta arquitectura sobre este dataset ronda el 79-80% de accuracy en test bajo el split actual, y que ganancias adicionales probablemente vendrán más de mejoras en los datos (fusión con SAR, más rásteres de entrenamiento) que de entrenar por más tiempo.
+
 
 
 // ============================================================
