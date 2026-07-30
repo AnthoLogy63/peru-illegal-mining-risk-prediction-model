@@ -46,6 +46,8 @@
   bibliography: bibliography("sources/references.bib"),
 )
 
+#set page(numbering: "1")
+
 #place(bottom + left, clearance: 0pt, float: true)[
   #line(length: 100%, stroke: 0.5pt)
   #set text(size: 7.5pt)
@@ -57,7 +59,7 @@
   #emph[URL:] https://orcid.org/XXXX-XXXX-XXXX-XXXX (Jeans Anthony Ajra Huacso), https://orcid.org/XXXX-XXXX-XXXX-XXXX (Paul Andree Cari Lipe), https://orcid.org/0009-0001-9764-4640 (Fernando Miguel Garambel Marín), https://orcid.org/XXXX-XXXX-XXXX-XXXX (Luis Guillermo Luque Condori), https://orcid.org/XXXX-XXXX-XXXX-XXXX (Alexandra Raquel Quispe Arratea)
   
   #v(8pt)
-  #emph[Preprint submitted to Elsevier] #h(1fr) #emph[Julio 30, 2026]
+  #h(1fr) #emph[Julio 30, 2026]
 ]
 
 
