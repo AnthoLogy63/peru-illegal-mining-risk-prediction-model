@@ -4,7 +4,8 @@ Clasificación binaria de minería ilegal (garimpo) en la Amazonía mediante Tra
 con imágenes satelitales 128×128. Stack: **Python 3.10+**, **PyTorch**, **timm**, **Jupyter**.
 
 Modelo de producción: **ResNet-50**, corrida `v2_bloques_tuned`, split espacial por bloques
-(`v2_bloques`), normalización medida sobre train.
+(`v2_bloques`), normalización medida sobre train. **Estudio experimental:** siempre 4 arquitecturas
+(EfficientNet-B0, ResNet-50, Swin-T, ViT-tiny) entrenadas y evaluadas en paralelo.
 
 ---
 
@@ -23,7 +24,7 @@ IA/
 │   ├── 05_model_input/          # manifiestos train/val/test
 │   │   └── v2_bloques/          # split final por bloques
 │   ├── 06_models/               # checkpoints .pt (gitignored)
-│   │   └── v2_bloques_tuned/    # modelo de producción
+│   │   └── v2_bloques_tuned/    # 4 checkpoints .pt (gitignored)
 │   └── 08_reporting/            # métricas, CSV, JSON por corrida
 │       ├── v2_bloques/
 │       └── v2_bloques_tuned/
@@ -105,7 +106,8 @@ src/
 Tras `pip install -e conf/`:
 
 ```bash
-garimpo evaluate --split test
+garimpo evaluate-all --split test   # comparativa 4 modelos
+garimpo evaluate --split test         # solo ResNet-50
 garimpo predict-image path/to/chip.png
 garimpo predict-manifest data/05_model_input/v2_bloques/manifest_test.csv -o preds.csv
 garimpo calibrate
@@ -114,10 +116,10 @@ garimpo calibrate
 Equivalente sin entry point:
 
 ```bash
-python -m src.cli evaluate --split test
+python -m src.cli evaluate-all --split test
 ```
 
-Requiere `data/06_models/v2_bloques_tuned/resnet50_best.pt` en disco.
+Requiere los **4** `.pt` en `data/06_models/v2_bloques_tuned/` para la comparativa completa.
 
 ---
 
@@ -139,12 +141,14 @@ python main.py
     ├─ train      → src/models/train.py → 06_models/v2_bloques_tuned/
     └─ evaluate   → src/models/evaluate.py → 08_reporting/v2_bloques_tuned/
 
-Inferencia: garimpo evaluate | predict-image | ...
+Inferencia: garimpo evaluate-all | evaluate | predict-image | ...
 ```
 
 ---
 
-## Corridas y modelo ganador
+## Corridas y comparativa de 4 modelos
+
+En **cada corrida** entrenamos y evaluamos las mismas cuatro arquitecturas timm. La tabla resume solo el **mejor F1 en test** por corrida; las métricas completas de los cuatro están en `test_results_summary_*.csv` y en `reports/figures/` (curvas y matrices por arquitectura).
 
 | Corrida | Split | Normalización | Mejor test F1 |
 |---------|-------|---------------|---------------|

@@ -1,4 +1,4 @@
-"""Rutas y defaults del pipeline de producción (v2_bloques_tuned, ResNet-50)."""
+"""Rutas y defaults del pipeline (v2_bloques_tuned, comparativa de 4 arquitecturas)."""
 
 from __future__ import annotations
 
@@ -27,7 +27,15 @@ CHIPS_DIR_CANDIDATES = (
     / "dataset_amazonia_garimpo_binario",
 )
 
-# Modelo ganador en test (v2_bloques_tuned)
+# Las 4 arquitecturas del estudio (siempre entrenar / evaluar / comparar las cuatro)
+TRAINING_MODELS = (
+    "efficientnet_b0",
+    "resnet50",
+    "swin_tiny_patch4_window7_224",
+    "vit_tiny_patch16_224",
+)
+
+# Mejor en test (v2_bloques_tuned) — default solo para inferencia puntual
 DEFAULT_MODEL = "resnet50"
 DEFAULT_CHECKPOINT = MODELS_DIR / f"{DEFAULT_MODEL}_best.pt"
 DEFAULT_THRESHOLD = 0.5  # 0.54 en val no mejora test para ResNet

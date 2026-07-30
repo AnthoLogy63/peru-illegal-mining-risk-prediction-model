@@ -18,10 +18,10 @@ from src.config import (
     PROJECT_ROOT,
     REPORT_DIR,
     RUN_NAME,
+    TRAINING_MODELS,
     resolve_chips_dir,
 )
-from src.data.dataset import create_dataloaders, create_loader
-from src.models.evaluate import evaluate_checkpoint
+from src.data.dataset import create_dataloaders
 from src.models.train import train_model
 from src.utils.helpers import get_device, set_seed
 
@@ -44,6 +44,7 @@ MODELS = (
     {"name": "swin_tiny_patch4_window7_224", "label": "Swin-T", "lr": LR_TRANSFORMER},
     {"name": "vit_tiny_patch16_224", "label": "ViT-tiny", "lr": LR_TRANSFORMER},
 )
+assert tuple(m["name"] for m in MODELS) == TRAINING_MODELS
 
 
 def _header(title: str) -> None:
@@ -61,7 +62,7 @@ def normalization_ready() -> bool:
 
 
 def checkpoints_ready() -> bool:
-    return all((MODELS_DIR / f"{m['name']}_best.pt").exists() for m in MODELS)
+    return all((MODELS_DIR / f"{name}_best.pt").exists() for name in TRAINING_MODELS)
 
 
 def evaluation_ready() -> bool:
@@ -160,56 +161,31 @@ def run_evaluate(*, force: bool = False) -> pd.DataFrame:
         print(f"[skip] Evaluación — {summary_csv.name} ya existe")
         return pd.read_csv(summary_csv)
 
-    checkpoints = sorted(MODELS_DIR.glob("*_best.pt"))
-    if not checkpoints:
-        raise FileNotFoundError(
-            f"No hay checkpoints en {MODELS_DIR}. Ejecuta el paso train o copia los .pt."
-        )
+    from src.models.evaluate import evaluate_all_models
 
     device = get_device()
-    test_loader = create_loader("test", batch_size=BATCH_SIZE, num_workers=NUM_WORKERS)
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
 
-    _header(f"Evaluación en test — {len(checkpoints)} modelos")
+    _header(f"Evaluación en test — {len(TRAINING_MODELS)} modelos")
 
-    rows: list[dict] = []
+    rows = evaluate_all_models(split="test", device=device)
+    df = pd.DataFrame(rows)
+
     log_lines = [
         f"EVALUACIÓN EN TEST ({RUN_NAME})",
         f"Fecha: {datetime.now():%Y-%m-%d %H:%M}",
         f"Device: {device}",
         "",
     ]
-
-    for i, ckpt_path in enumerate(checkpoints, start=1):
-        print(f"\n>>> [{i}/{len(checkpoints)}] {ckpt_path.name}")
-        result = evaluate_checkpoint(ckpt_path, test_loader, threshold=DEFAULT_THRESHOLD, device=device)
-
-        row = {
-            "model": result["model_name"],
-            "variant": RUN_NAME,
-            "checkpoint": ckpt_path.name,
-            "train_best_epoch": result.get("train_best_epoch"),
-            "test_accuracy": round(result["accuracy"], 4),
-            "test_macro_f1": round(result["macro_f1"], 4),
-            "test_f1_com_garimpo": round(result["f1_com_garimpo"], 4),
-            "test_f1_sem_garimpo": round(result["f1_sem_garimpo"], 4),
-            "test_recall_com_garimpo": round(result["recall_com_garimpo"], 4),
-            "test_precision_com_garimpo": round(result["precision_com_garimpo"], 4),
-        }
-        rows.append(row)
+    for row in rows:
         log_lines += [
-            f"MODELO: {result['model_name']} ({ckpt_path.name})",
+            f"MODELO: {row['model']} ({row['checkpoint']})",
             f"  test macro F1: {row['test_macro_f1']:.4f}",
             f"  test accuracy: {row['test_accuracy']:.4f}",
             "",
         ]
 
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
-
-    df = pd.DataFrame(rows).sort_values("test_macro_f1", ascending=False)
     df.to_csv(summary_csv, index=False)
-
     summary_txt = REPORT_DIR / f"test_results_{RUN_NAME}.txt"
     summary_txt.write_text("\n".join(log_lines), encoding="utf-8")
 

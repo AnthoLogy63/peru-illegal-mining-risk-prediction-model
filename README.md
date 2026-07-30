@@ -1,10 +1,10 @@
 # Clasificación de minería ilegal (garimpo) en la Amazonía
 
-Proyecto de clasificación binaria de imágenes satelitales para detectar minería aluvial ilegal (*garimpo*) en la cuenca amazónica. Entrena y evalúa CNNs con Transfer Learning sobre el dataset público **Amazonia Garimpo Binario** (chips 128×128 RGB).
+Proyecto de clasificación binaria de imágenes satelitales para detectar minería aluvial ilegal (*garimpo*) en la cuenca amazónica. Entrena y **compara cuatro CNNs** (ResNet-50, EfficientNet-B0, Swin-T, ViT-tiny) con Transfer Learning sobre el dataset **Amazonia Garimpo Binario** (chips 128×128 RGB). El análisis experimental es siempre sobre **las cuatro arquitecturas**; ResNet-50 es además el **modelo de producción** (mejor macro F1 en test de la corrida final).
 
-**Modelo de producción:** ResNet-50, corrida `v2_bloques_tuned`, test macro F1 ≈ **0.794**.
+**Corrida final:** `v2_bloques_tuned` — test macro F1 ResNet-50 ≈ **0.794** (tabla completa de los 4 modelos abajo).
 
-Documentación de arquitectura: [`docs/architecture.md`](docs/architecture.md)
+Documentación de arquitectura: [`docs/architecture.md`](docs/architecture.md). Historial del modelado para el paper: [`HISTORIAL.md`](HISTORIAL.md).
 
 ---
 
@@ -88,18 +88,21 @@ Los notebooks `07`/`08` (norm ImageNet) y `04_*`/`05_*` (split v1) se conservan 
 
 ## Inferencia y prueba del pipeline
 
-Los checkpoints `.pt` no están en git. Copia los 4 modelos en `data/06_models/v2_bloques_tuned/` — ver [`data/06_models/v2_bloques_tuned/README.md`](data/06_models/v2_bloques_tuned/README.md).
+Los checkpoints `.pt` no están en git. Copia **los 4 modelos** en `data/06_models/v2_bloques_tuned/` — ver [`data/06_models/v2_bloques_tuned/README.md`](data/06_models/v2_bloques_tuned/README.md).
 
-Guía paso a paso para probar instalación, checkpoints y CLI: [`PIPELINE.md`](PIPELINE.md).
+Guía paso a paso: [`PIPELINE.md`](PIPELINE.md). Demo en vivo con los 4 modelos sobre una imagen: `notebooks/09_demo_inferencia_vivo.ipynb`.
+
+**CLI** — comparativa de las 4 arquitecturas vs. un solo modelo:
 
 ```bash
-garimpo evaluate --split test
+garimpo evaluate-all --split test    # los 4 modelos (análisis principal)
+garimpo evaluate --split test        # solo ResNet-50 (producción)
 garimpo predict-image ruta/al/chip.png
 garimpo predict-manifest data/05_model_input/v2_bloques/manifest_test.csv -o preds.csv
 garimpo calibrate
 ```
 
-Equivalente: `python -m src.cli <comando>`.
+Equivalente: `python -m src.cli <comando>` (p. ej. `python -m src.cli evaluate-all --split test`).
 
 ---
 

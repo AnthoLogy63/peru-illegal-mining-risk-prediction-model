@@ -1,4 +1,4 @@
-"""Pipeline de clasificación de garimpo — modelo de producción ResNet-50 (v2_bloques_tuned)."""
+"""Pipeline de clasificación de garimpo — comparativa de 4 CNNs (v2_bloques_tuned)."""
 
 from src.config import (
     DEFAULT_CHECKPOINT,
@@ -7,6 +7,7 @@ from src.config import (
     MANIFEST_DIR,
     MODELS_DIR,
     RUN_NAME,
+    TRAINING_MODELS,
 )
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "MANIFEST_DIR",
     "MODELS_DIR",
     "RUN_NAME",
+    "TRAINING_MODELS",
 ]
