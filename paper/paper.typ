@@ -162,7 +162,7 @@ El monitoreo satelital de minería ilegal evolucionó desde los clasificadores e
 
 = 3. Materiales y métodos
 
-== _3.1. Fundamentos Teóricos_
+== _3.1. Fundamentos teóricos_
 
 La extracción ilegal de minerales en ríos, comúnmente conocida como garimpo, provoca un cambio drástico y permanente en la estructura ecológica del bosque amazónico @loboMappingMiningAreas2018. La técnica de extracción mecánica requiere la eliminación completa de la vegetación del bosque, la remoción intensiva de la capa superior del suelo y la creación de estanques artificiales para sedimentos de desechos. Estas actividades generan metales pesados extremadamente dañinos, principalmente mercurio, de forma directa en las cuencas cercanas @pestanaLetsTalkMercury2022. La contaminación química del agua impacta drásticamente en la biodiversidad de los ecosistemas acuáticos y afecta los medios de vida y la salud de las comunidades que viven a la orilla @crespo-lopezMercuryAmazonDanger2023.
 
@@ -213,7 +213,7 @@ $ "Recall" = T P / (T P + F N) $ <eq-rec>
 $ "F1" = 2 times ("Precision" times "Recall") / ("Precision" + "Recall") $ <eq-f1>
 
 
-== _3.2. Herramientas y Tecnologías_
+== _3.2. Herramientas y tecnologías_
 
 La implementación experimental se desarrolló con Python 3.10 o superior y Jupyter Notebook como entorno para el análisis exploratorio, la validación espacial, la normalización y la documentación de las corridas. Pandas y NumPy permitieron procesar el catálogo `manifesto_chips.csv`, organizar los manifiestos de entrenamiento, validación y prueba y calcular estadísticas descriptivas. Pillow y OpenCV se emplearon para la lectura y exploración de los recortes PNG, mientras que GeoPandas apoyó el tratamiento de los atributos geográficos y la verificación de la distribución territorial de las muestras.
 
@@ -267,7 +267,7 @@ La @fig-muestras presenta ejemplos visuales de ambas clases. Los recortes etique
   caption: [Ejemplos de recortes clasificados como ausencia de garimpo (`sem_garimpo`) y presencia de garimpo (`com_garimpo`).]
 ) <fig-muestras>
 
-== _3.4. Metodología Propuesta_
+== _3.4. Metodología propuesta_
 
 La metodología se organizó como un pipeline de clasificación supervisada compuesto por seis etapas: validación del catálogo, partición espacial, preparación de las imágenes, construcción de los cargadores de datos, entrenamiento comparativo y evaluación final. La unidad de análisis fue el chip satelital RGB de $128 times 128$ píxeles, cuya ruta, clase y ubicación geográfica se obtuvieron del archivo `manifesto_chips.csv`.
 
@@ -533,7 +533,7 @@ La comparación principal se realizó mediante macro F1, dado que esta métrica 
 
 Esta sección evalúa el rendimiento de las cuatro arquitecturas (ResNet-50, EfficientNet-B0, Swin-T y ViT-tiny) sobre el conjunto de prueba de la corrida v2_bloques_tuned: 17,312 chips (50.2% com_garimpo), evaluados con umbral de decisión 0.5. A diferencia de la corrida inicial, el split train/val/test aquí no se hizo por chip individual ni por ráster completo, sino por bloques espaciales de 32×32 celdas con un buffer de 2 chips en las costuras entre bloques de distinto split, para evitar que la cercanía geográfica entre chips vecinos infle las métricas (ver Sección 3.3 para el detalle metodológico del split). Además, los cuatro modelos se entrenaron con normalización propia del dataset (calculada sobre los valores reales de intensidad de los chips amazónicos) en lugar de la normalización estándar de ImageNet.
 
-== 4.1 Desempeño Comparativo
+== 4.1 Desempeño comparativo
 
 La @tabla-resultados-finales resume las métricas de test de las cuatro arquitecturas.
 
@@ -576,7 +576,7 @@ Es importante destacar que este orden no coincide con el de validación: durante
 
 El entrenamiento se hizo con lote de 32, un máximo de 30 épocas y Early Stopping con paciencia de 7; ResNet-50 y EfficientNet-B0 usaron una tasa de aprendizaje de $10^{-4}$, mientras que los dos transformers (Swin-T y ViT-tiny) usaron $3 times 10^{-5}$, siguiendo la práctica habitual de tasas más bajas para arquitecturas basadas en atención preentrenadas.
 
-== 4.2 Resultados por Arquitectura
+== 4.2 Resultados por arquitectura
 
 *ResNet-50.* Es el modelo adoptado como línea de producción. Convergió en la época 9 de 16 corridas antes de que Early Stopping interrumpiera el entrenamiento. Sus curvas de entrenamiento (@fig-resnet-curves) muestran un loss de validación relativamente estable después de la época 6, sin señales fuertes de sobreajuste hacia el final. La matriz de confusión en test (@fig-resnet-conf) muestra 6,941 verdaderos negativos, 1,683 falsos positivos, 1,886 falsos negativos y 6,802 verdaderos positivos.
 
@@ -626,7 +626,7 @@ El entrenamiento se hizo con lote de 32, un máximo de 30 épocas y Early Stoppi
   caption: [Matriz de confusión de EfficientNet-B0 en test.],
 ) <fig-eff-conf>
 
-== 4.3 Análisis de Errores (ResNet-50)
+== 4.3 Análisis de errores (ResNet-50)
 
 Centrándonos en el modelo de producción, ResNet-50 se equivocó en 3,569 de los 17,312 chips de test (20.62%), repartidos en 1,683 falsos positivos y 1,886 falsos negativos. El recall de garimpo llegó a 78.29%, lo que en términos prácticos significa que el sistema detecta correctamente cerca de 8 de cada 10 focos reales de minería ilegal sin intervención humana; los otros 2 quedarían sin marcar y dependerían de otras fuentes de vigilancia para ser detectados.
 
@@ -640,13 +640,13 @@ No se repitió, sobre este split, la revisión manual con muestra aleatoria de f
 
 = 5. Discusión
 
-== 5.1 Interpretación de Resultados
+== 5.1 Interpretación de resultados
 
 El modelo de producción, ResNet-50, alcanza un F1 macro de 0.7938 y un recall de 78.29% para la clase com_garimpo sobre un conjunto de prueba de 17,312 chips completamente aislado por bloques geográficos del conjunto de entrenamiento. Como se discutió en la Sección 4, el recall sigue siendo la métrica prioritaria en este dominio: cada falso negativo es un foco de garimpo activo que el sistema no marca, mientras que un falso positivo solo le cuesta al analista una verificación adicional.
 
 Un hallazgo relevante de esta corrida es el papel de la normalización. En una corrida previa sobre el mismo split por bloques pero usando la normalización estándar de ImageNet, el mejor modelo en test fue Swin-T, con un F1 macro de 0.7897. Al sustituir esa normalización por una calculada directamente sobre la distribución real de colores de los chips amazónicos (que resultaron ser considerablemente más oscuros que las imágenes de ImageNet), ResNet-50 pasó a ser el mejor modelo, con un F1 macro de 0.7938. Esto sugiere que, al menos para esta arquitectura, ajustar el preprocesamiento al dominio específico del dataset tuvo más impacto que la elección de la arquitectura en sí, y es consistente con la intuición de que los rangos dinámicos de reflectancia de la selva amazónica no se parecen a los de las fotografías cotidianas sobre las que se preentrena ImageNet.
 
-== 5.2 Comparación Cuantitativa con Trabajos Relacionados
+== 5.2 Comparación cuantitativa con trabajos relacionados
 
 La @tabla-comparacion-literatura actualiza la comparación de recall/F1 frente a los trabajos de mayor relevancia, usando ahora los resultados de test de la corrida v2_bloques_tuned.
 
