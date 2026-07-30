@@ -54,8 +54,6 @@
   \* Autor de correspondencia.\
   #emph[Email addresses:] jajra\@unsa.edu.pe (Jeans Anthony Ajra Huacso), pcaril\@unsa.edu.pe (Paul Andree Cari Lipe), fgarambel\@unsa.edu.pe (Fernando Miguel Garambel Marín), lluquecon\@unsa.edu.pe (Luis Guillermo Luque Condori), aquispearr\@unsa.edu.pe (Alexandra Raquel Quispe Arratea)\
   
-  #emph[URL:] https://orcid.org/XXXX-XXXX-XXXX-XXXX (Jeans Anthony Ajra Huacso), https://orcid.org/0009-0002-6246-6837 (Paul Andree Cari Lipe), https://orcid.org/0009-0001-9764-4640 (Fernando Miguel Garambel Marín), https://orcid.org/XXXX-XXXX-XXXX-XXXX (Luis Guillermo Luque Condori), https://orcid.org/XXXX-XXXX-XXXX-XXXX (Alexandra Raquel Quispe Arratea)
-  
   #v(8pt)
   #h(1fr) #emph[Julio 30, 2026]
 ]
