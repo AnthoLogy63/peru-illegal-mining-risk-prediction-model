@@ -713,50 +713,36 @@ A continuación se detalla el código completo del cargador de datos geoespacial
   align(left)[
   #rect(width: 95%, inset: 10pt, fill: luma(250))[
     ```python
-    import tensorflow as tf
+    import torch
+    from torch.utils.data import Dataset
+    from PIL import Image
     import pandas as pd
-    import numpy as np
-    
-    def construir_generadores(csv_path, img_dir, batch_size=32):
-        df = pd.read_csv(csv_path)
-        df['label'] = df['label_int'].astype(str)
-        
-        datagen = tf.keras.preprocessing.image.ImageDataGenerator(
-            rescale=1./255,
-            validation_split=0.2,
-            rotation_range=20,
-            horizontal_flip=True,
-            zoom_range=0.15
-        )
-        
-        train_gen = datagen.flow_from_dataframe(
-            dataframe=df,
-            directory=img_dir,
-            x_col="image_name",
-            y_col="label",
-            subset="training",
-            batch_size=batch_size,
-            seed=42,
-            class_mode="binary",
-            target_size=(128, 128)
-        )
-        
-        val_gen = datagen.flow_from_dataframe(
-            dataframe=df,
-            directory=img_dir,
-            x_col="image_name",
-            y_col="label",
-            subset="validation",
-            batch_size=batch_size,
-            seed=42,
-            class_mode="binary",
-            target_size=(128, 128)
-        )
-        return train_gen, val_gen
+    import os
+
+    class GarimpoDataset(Dataset):
+        def __init__(self, csv_file, img_dir, transform=None):
+            self.data = pd.read_csv(csv_file)
+            self.img_dir = img_dir
+            self.transform = transform
+            
+        def __len__(self):
+            return len(self.data)
+            
+        def __getitem__(self, idx):
+            img_name = self.data.iloc[idx]['png_path']
+            img_path = os.path.join(self.img_dir, img_name)
+            image = Image.open(img_path).convert('RGB')
+            
+            label = self.data.iloc[idx]['label_int']
+            
+            if self.transform:
+                image = self.transform(image)
+                
+            return image, torch.tensor(label, dtype=torch.long)
     ```
   ]
   ],
-  caption: [Implementación de tubería de datos y aumento en TensorFlow/Keras.]
+  caption: [Implementación de la clase Dataset en PyTorch.]
 )
 
 = Apéndice B: Configuración del Bloque Residual
@@ -767,37 +753,44 @@ El siguiente código presenta la implementación a bajo nivel del bloque de cuel
   align(left)[
   #rect(width: 95%, inset: 10pt, fill: luma(250))[
     ```python
-    def bloque_residual_cuello_botella(x, filtros, s=1):
-        f1, f2, f3 = filtros
-        x_shortcut = x
-        
-        # Capa 1: Compresión Dimensional
-        x = Conv2D(f1, (1, 1), strides=(s, s), padding='valid')(x)
-        x = BatchNormalization()(x)
-        x = Activation('relu')(x)
-        
-        # Capa 2: Extracción Espacial
-        x = Conv2D(f2, (3, 3), strides=(1, 1), padding='same')(x)
-        x = BatchNormalization()(x)
-        x = Activation('relu')(x)
-        
-        # Capa 3: Expansión Dimensional
-        x = Conv2D(f3, (1, 1), strides=(1, 1), padding='valid')(x)
-        x = BatchNormalization()(x)
-        
-        # Ajuste del shortcut si las dimensiones cambian
-        if s != 1 or x_shortcut.shape[-1] != f3:
-            x_shortcut = Conv2D(f3, (1, 1), strides=(s, s))(x_shortcut)
-            x_shortcut = BatchNormalization()(x_shortcut)
+    import torch.nn as nn
+
+    class BloqueResidualCuelloBotella(nn.Module):
+        def __init__(self, in_channels, filtros, stride=1):
+            super().__init__()
+            f1, f2, f3 = filtros
             
-        # Salto Residual Matemático
-        x = Add()([x, x_shortcut])
-        x = Activation('relu')(x)
-        return x
+            self.conv1 = nn.Conv2d(in_channels, f1, kernel_size=1, stride=stride, bias=False)
+            self.bn1 = nn.BatchNorm2d(f1)
+            
+            self.conv2 = nn.Conv2d(f1, f2, kernel_size=3, padding=1, bias=False)
+            self.bn2 = nn.BatchNorm2d(f2)
+            
+            self.conv3 = nn.Conv2d(f2, f3, kernel_size=1, bias=False)
+            self.bn3 = nn.BatchNorm2d(f3)
+            self.relu = nn.ReLU(inplace=True)
+            
+            self.shortcut = nn.Sequential()
+            if stride != 1 or in_channels != f3:
+                self.shortcut = nn.Sequential(
+                    nn.Conv2d(in_channels, f3, kernel_size=1, stride=stride, bias=False),
+                    nn.BatchNorm2d(f3)
+                )
+
+        def forward(self, x):
+            identidad = self.shortcut(x)
+            
+            out = self.relu(self.bn1(self.conv1(x)))
+            out = self.relu(self.bn2(self.conv2(out)))
+            out = self.bn3(self.conv3(out))
+            
+            out += identidad
+            out = self.relu(out)
+            return out
     ```
   ]
   ],
-  caption: [Estructura interna matemática del bloque residual (Bottleneck).]
+  caption: [Estructura interna matemática del bloque residual (Bottleneck) en PyTorch.]
 )
 
 = Apéndice C: Infraestructura Computacional y Tiempos de Entrenamiento
@@ -808,9 +801,9 @@ El tiempo de cálculo para cada época completa del conjunto de entrenamiento ma
 
 Para el despliegue del modelo en un escenario de fiscalización ambiental en tiempo real, el proceso de inferencia (*Forward Pass*) requiere una demanda computacional significativamente menor. Procesar un recorte satelital individual toma apenas 18 milisegundos en la misma GPU. A este ritmo, clasificar la superficie equivalente a la Reserva Nacional Tambopata en Perú (aproximadamente 2,746 km² o 43,000 recortes de $128 times 128$) requeriría un tiempo administrativo total de inferencia de 13 minutos netos, un rendimiento sin precedentes comparado con los meses de trabajo humano necesarios para realizar una evaluación visual equivalente.
 
-= Apéndice D: Implementación del Ciclo de Entrenamiento en Keras
+= Apéndice D: Implementación del Ciclo de Entrenamiento en PyTorch
 
-A fin de garantizar la absoluta reproducibilidad del experimento científico, el código fuente completo del ciclo de entrenamiento (Training Loop), incluyendo la instanciación de ResNet-50, la congelación de las capas inferiores preentrenadas, la adición del cabezal de clasificación, y la compilación con la función de entropía cruzada binaria y el optimizador Adam, se encuentra documentado y publicado íntegramente en el repositorio oficial de GitHub del proyecto. Se ha omitido su transcripción directa para priorizar la densidad de discusión analítica y cumplir con las normativas de extensión del formato IEEE.
+A fin de garantizar la absoluta reproducibilidad del experimento científico, el código fuente completo del ciclo de entrenamiento (Training Loop), incluyendo la instanciación de ResNet-50 mediante la biblioteca `timm`, la configuración del cabezal de clasificación de dos salidas, y la compilación con la función `CrossEntropyLoss` y el optimizador Adam, se encuentra documentado y publicado íntegramente en el repositorio oficial de GitHub del proyecto. Se ha omitido su transcripción directa para priorizar la densidad de discusión analítica y cumplir con las normativas de extensión del formato IEEE.
 
 
 
