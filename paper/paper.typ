@@ -214,13 +214,13 @@ $ "F1" = 2 times ("Precision" times "Recall") / ("Precision" + "Recall") $ <eq-f
 
 
 == _3.2. Herramientas y Tecnologías_
-Toda la arquitectura del sistema para procesar, modelar datos espaciales y aplicar aprendizaje automático se desarrolló usando Python 3. 12, operando dentro de los entornos interactivos de Jupyter Notebook y Google Colab. Para manejar grandes volúmenes de datos geoespaciales, estructurar catálogos y efectuar cálculos matriciales eficientes en múltiples dimensiones, se usaron bibliotecas científicas especializadas NumPy y Pandas @Mdpicom2076341712.
 
-El desarrollo de la arquitectura, el entrenamiento optimizado en hardware con Unidades de Procesamiento Gráfico (GPU) y la evaluación de los parámetros de los modelos convolucionales se desarrollaron con la biblioteca TensorFlow y su interfaz Keras. Asimismo, dividir las muestras de manera estratificada, normalizar los tensores y calcular automáticamente las métricas estadísticas para la validación se gestionaron mediante los módulos de la biblioteca de aprendizaje automático Scikit-learn @kingmaAdamMethodStochastic2017.
+La implementación experimental se desarrolló con Python 3.10 o superior y Jupyter Notebook como entorno para el análisis exploratorio, la validación espacial, la normalización y la documentación de las corridas. Pandas y NumPy permitieron procesar el catálogo `manifesto_chips.csv`, organizar los manifiestos de entrenamiento, validación y prueba y calcular estadísticas descriptivas. Pillow y OpenCV se emplearon para la lectura y exploración de los recortes PNG, mientras que GeoPandas apoyó el tratamiento de los atributos geográficos y la verificación de la distribución territorial de las muestras.
 
+El entrenamiento se implementó con PyTorch. La biblioteca `torchvision` proporcionó las transformaciones de aumento de datos, la conversión a tensores y la normalización, mientras que `timm` permitió cargar con pesos preentrenados en ImageNet las arquitecturas EfficientNet-B0, ResNet-50, Swin-T y ViT-tiny. Scikit-learn se utilizó para calcular Accuracy, Precision, Recall y F1-score, y Matplotlib y Seaborn permitieron generar las visualizaciones de los experimentos. La ejecución mediante CUDA aceleró el ajuste de los modelos y habilitó el uso de precisión mixta durante el entrenamiento.
 == _3.3. Dataset_
 
-El conjunto de datos utilizado en la experimentación corresponde al repositorio público "Amazonia Garimpo Binario", estructurado y publicado en la plataforma Kaggle por Grupioni et al. @grupioniDeteccaoGarimpoNa2026. El corpus geoespacial comprende un total masivo de 111,584 recortes de imágenes satelitales ópticas en formato PNG, extraídas con una resolución geométrica estandarizada de $128 times 128$ píxeles. La gestión relacional de las muestras satelitales se rige por el archivo de control `manifesto_chips.csv`, el cual articula los atributos de entrada y salida para el modelamiento predictivo. Específicamente, este documento define la variable de entrada independiente $X$ (`png_path`) como la ruta relativa del archivo de imagen en el sistema de directorios, y la variable de salida dependiente a predecir $Y$ (`label_int`) como un indicador entero binario. Esta etiqueta asigna estrictamente el valor entero 1 para confirmar la presencia de minería ilegal activa (`com_garimpo`) y el valor entero 0 para parches de selva amazónica conservada sin alteración antrópica (`sem_garimpo`). La @tabla-manifesto detalla las especificaciones de las variables del catálogo.
+El conjunto de datos utilizado en la experimentación corresponde al repositorio público _Amazonia Garimpo Binario_, publicado en la plataforma Kaggle por Grupioni et al. @grupioniDeteccaoGarimpoNa2026. El conjunto contiene 111,584 recortes de imágenes satelitales ópticas en formato PNG, con una dimensión uniforme de $128 times 128$ píxeles y tres canales RGB. La organización y trazabilidad de las muestras se realiza mediante el archivo `manifesto_chips.csv`, que registra la ruta de cada imagen, su ráster de origen, su posición dentro de la rejilla territorial, sus coordenadas geográficas y su etiqueta binaria. La entrada $X$ corresponde al tensor RGB obtenido al cargar el archivo indicado por `png_path`, mientras que la variable objetivo $Y$, almacenada en `label_int`, adopta el valor 1 cuando existe presencia de garimpo (`com_garimpo`) y 0 cuando no se identifica garimpo (`sem_garimpo`). La @tabla-manifesto resume las variables utilizadas en el pipeline final.
 
 #figure(
   block[
@@ -231,104 +231,300 @@ El conjunto de datos utilizado en la experimentación corresponde al repositorio
       inset: 4pt,
       stroke: none,
       table.hline(stroke: 0.8pt + black),
-      table.header([*Columna del CSV*], [*Tipo de dato*], [*Descripción técnica y función paramétrica en el modelo*]),
+      table.header(
+        [*Columna del CSV*],
+        [*Tipo de dato*],
+        [*Descripción técnica y función en el modelo*]
+      ),
       table.hline(stroke: 0.5pt + black),
-      [`png_path` ($X$)], [Cadena / Ruta], [Ruta relativa de la imagen satelital multiespectral en formato PNG de $128 times 128$ píxeles.],
-      [`label_int` ($Y$)], [Entero binario], [Variable objetivo donde 1 codifica minería ilegal activa (`com_garimpo`) y 0 selva intacta (`sem_garimpo`).],
-      [`split`], [Categórico], [Identificador de partición estratificada para entrenamiento (80%), validación (10%) y prueba (10%).],
+      [`png_path`], [Cadena / Ruta],
+      [Ruta relativa utilizada para localizar y cargar el recorte satelital RGB de $128 times 128$ píxeles que constituye la entrada visual $X$.],
+
+      [`label_int` ($Y$)], [Entero binario],
+      [Variable objetivo donde 1 representa presencia de garimpo (`com_garimpo`) y 0 ausencia de garimpo (`sem_garimpo`).],
+
+      [`split`], [Categórico],
+      [Partición espacial asignada al chip: entrenamiento, validación o prueba, obtenida mediante bloques territoriales y una zona de separación entre particiones.],
+
       table.hline(stroke: 0.8pt + black)
     )
   ],
-  caption: [#smallcaps[Estructura y diccionario de datos del catálogo satelital manifesto_chips.csv.]],
+  caption: [#smallcaps[Estructura de las variables principales del catálogo satelital `manifesto_chips.csv`.]],
   kind: table,
 ) <tabla-manifesto>
 
-El atributo más destacable del corpus satelital utilizado radica en su equilibrio distribucional casi perfecto entre las clases en estudio. La clase positiva de minería activa contiene exactamente 56,037 instancias satelitales (50.22%), mientras que la clase negativa de selva conservada agrupa 55,547 instancias (49.78%), según se ilustra en el análisis gráfico de la @fig-pie. Este balance estadístico erradica el sesgo inductivo mayoritario común en clasificadores algorítmicos, permitiendo que la métrica de exactitud global sea un estimador fidedigno sin recurrir a técnicas de sobremuestreo sintético.
+El conjunto presenta una distribución casi equilibrada. La clase `sem_garimpo` contiene 56,043 imágenes, equivalentes al 50.22 %, mientras que `com_garimpo` reúne 55,541 imágenes, correspondientes al 49.78 %, como se muestra en la @fig-pie. Esta distribución reduce el riesgo de que el clasificador favorezca una clase debido únicamente a su frecuencia. No obstante, la evaluación se complementa con Precision, Recall, F1-score por clase y macro F1, debido a que el balance global no elimina posibles sesgos geográficos, visuales o de etiquetado.
 
 #figure(
   image("figures/pie_chart.png", width: 85%),
-  caption: [Distribución balanceada de clases en el dataset Amazonia Garimpo Binario.]
+  caption: [Distribución de las clases `sem_garimpo` y `com_garimpo` en el conjunto completo.]
 ) <fig-pie>
 
-Por otra parte, la @fig-muestras presenta muestras visuales comparativas del catálogo, evidenciando las notables diferencias radiométricas y morfológicas entre los parches de selva amazónica intacta y las zonas con deforestación activa y pozas de relaves.
+La @fig-muestras presenta ejemplos visuales de ambas clases. Los recortes etiquetados como `com_garimpo` muestran patrones asociados con remoción de vegetación, exposición del suelo, sedimentos y alteración de cuerpos de agua, mientras que los ejemplos `sem_garimpo` no presentan la evidencia visual de garimpo utilizada para construir las etiquetas del conjunto.
 
 #figure(
   image("figures/dataset_samples.png", width: 100%),
-  caption: [Muestras visuales comparativas de parches de selva intacta (sem_garimpo) frente a áreas de minería activa y pozas de relaves (com_garimpo).]
+  caption: [Ejemplos de recortes clasificados como ausencia de garimpo (`sem_garimpo`) y presencia de garimpo (`com_garimpo`).]
 ) <fig-muestras>
-
 
 == _3.4. Metodología Propuesta_
 
-El pipeline metodológico inicia con el preprocesamiento de los tensores fotométricos, ejecutando una normalización radiométrica que reescala los valores enteros de intensidad de los píxeles desde $[0, 255]$ hacia el dominio continuo $[0, 1]$. Para generalizar las invarianzas espaciales y evitar severamente el sobreajuste (*overfitting*), se implementa un protocolo estricto de aumento de datos dinámico (*Data Augmentation*) en tiempo real durante cada época @adedejiImageAugmentationSatellite2022. Este generador estocástico aplica transformaciones afines arbitrarias en memoria: rotaciones uniformes de hasta $20°$, inversiones horizontales automáticas (*horizontal flips*) y variaciones proporcionales de escala o zoom del 15% @safonovaTenDeepLearning2023. Estas mutaciones obligan al modelo convolucional a generalizar características intrínsecas de las excavaciones mineras y pozas de relaves, impidiendo que la red memorice las orientaciones espaciales estáticas del conjunto de entrenamiento.
+La metodología se organizó como un pipeline de clasificación supervisada compuesto por seis etapas: validación del catálogo, partición espacial, preparación de las imágenes, construcción de los cargadores de datos, entrenamiento comparativo y evaluación final. La unidad de análisis fue el chip satelital RGB de $128 times 128$ píxeles, cuya ruta, clase y ubicación geográfica se obtuvieron del archivo `manifesto_chips.csv`.
 
-La optimización paramétrica de la red computa la función de pérdida de Entropía Cruzada Binaria (*Binary Crossentropy Loss*), la cual penaliza de forma logarítmica las divergencias estadísticas entre las probabilidades calculadas por la neurona de salida sigmoidal y las etiquetas reales del terreno. Para la actualización iterativa de los pesos sinápticos, se utiliza el optimizador Adam (*Adaptive Moment Estimation*) con una tasa de aprendizaje hiperparametrizada en $alpha = 10^{-4}$ @kingmaAdamMethodStochastic2017. El algoritmo Adam actualiza los momentos estadísticos del gradiente según las siguientes ecuaciones de recurrencia:
+#v(6pt)
+#text(style: "italic")[
+  3.4.1. Validación y partición espacial del conjunto
+]
+#v(3pt)
 
-$ m_t = beta_1 m_{t-1} + (1 - beta_1) g_t $ <eq-adam-m>
-$ v_t = beta_2 v_{t-1} + (1 - beta_2) g_t^2 $ <eq-adam-v>
-$ theta_t = theta_{t-1} - (alpha hat(m)_t) / (sqrt(hat(v)_t) + epsilon) $ <eq-adam-up>
+Antes del entrenamiento se verificó la integridad espacial del conjunto. El análisis confirmó que los 111,584 chips ocupaban celdas únicas de una rejilla territorial común, que no existían centroides, rutas o cajas geográficas duplicadas y que los doce rásteres de origen no presentaban superposición de área. Sin embargo, la primera partición por ráster presentó una limitación importante: el conjunto de prueba contenía únicamente dos rásteres y solo el 19.1 % de sus muestras pertenecía a la clase `com_garimpo`, frente al 56.1 % observado en entrenamiento. Además, algunos chips de diferentes particiones permanecían físicamente próximos en las costuras entre rásteres.
 
-Donde $m_t$ y $v_t$ representan el primer y segundo momento del gradiente $g_t$ con corrección de sesgo ($hat(m)_t, hat(v)_t$), utilizando factores de decaimiento $beta_1 = 0.9$ y $beta_2 = 0.999$. La secuencia operativa integral de preprocesamiento, extracción y optimización se ilustra en el diagrama de flujo de la @fig-flowchart.
+Para reducir esta dependencia espacial, se construyó la partición final `v2_bloques`. Los chips se agruparon según su posición territorial en bloques de $32 times 32$ celdas y cada bloque completo fue asignado a entrenamiento, validación o prueba. La asignación consideró la prevalencia de `com_garimpo` de cada bloque con el propósito de distribuir regiones con distintas proporciones de minería entre las tres particiones.
+
+Posteriormente, se aplicó una zona de separación espacial de dos chips en las fronteras entre bloques pertenecientes a diferentes particiones. El conjunto de prueba conservó sus muestras; validación cedió los chips cercanos a prueba y entrenamiento cedió aquellos próximos a validación o prueba. Las muestras retiradas se registraron como `descartado_costura` y no participaron en el entrenamiento ni en la evaluación.
+
+La partición resultante contiene 71,592 chips de entrenamiento, 16,518 de validación y 17,312 de prueba. La proporción de `com_garimpo` fue de 49.5 %, 51.1 % y 50.2 %, respectivamente. Esta distribución conserva el equilibrio de clases y disminuye el riesgo de obtener resultados artificialmente optimistas por proximidad geográfica entre las muestras.
 
 #figure(
-  align(center)[
-  #rect(width: 85%, inset: 12pt, fill: luma(245), radius: 5pt)[
-    #text(weight: "bold", size: 9pt)[Diagrama de Flujo del Pipeline Metodológico]\
-    #v(6pt)
+  block[
     #set text(size: 8pt)
-    1. *Ingesta de Datos:* Lectura del catálogo relacional `manifesto_chips.csv`.\
-    2. *Preprocesamiento:* Normalización radiométrica $[0, 1]$ y división estratificada (80/10/10).\
-    3. *Data Augmentation Dinámico:* Rotaciones (20°), Horizontal Flips, Zoom afín (15%).\
-    4. *Extracción Jerárquica:* Forward pass en arquitectura residual preentrenada ResNet-50.\
-    5. *Clasificación Densa:* Global Average Pooling -> Dense (512) -> Dropout (0.5) -> Sigmoid.\
-    6. *Optimización Sináptica:* Cálculo de BCE Loss y retropropagación vía Adam ($lr=10^{-4}$).\
-    7. *Control de Parada:* Monitoreo de pérdida en validación mediante Early Stopping (paciencia = 5).
-  ]
+    #table(
+      columns: (1.1fr, 1.2fr, 1.2fr, 1.2fr),
+      align: center,
+      inset: 5pt,
+      stroke: none,
+      table.hline(stroke: 0.8pt + black),
+      table.header(
+        [*Partición*],
+        [*Número de chips*],
+        [*Rásteres representados*],
+        [*`com_garimpo`*]
+      ),
+      table.hline(stroke: 0.5pt + black),
+      [Entrenamiento], [71,592], [12], [49.5 %],
+      [Validación], [16,518], [11], [51.1 %],
+      [Prueba], [17,312], [11], [50.2 %],
+      table.hline(stroke: 0.8pt + black)
+    )
   ],
-  caption: [Flujo secuencial del pipeline metodológico de preprocesamiento, aumento de datos y entrenamiento predictivo.]
+  caption: [Distribución final de las muestras mediante la partición espacial `v2_bloques`.],
+  kind: table,
+) <tabla-split-bloques>
+
+#v(6pt)
+#text(style: "italic")[
+  3.4.2. Preparación y normalización de las imágenes
+]
+#v(3pt)
+
+Cada muestra fue localizada mediante el atributo `png_path`, abierta con Pillow y convertida explícitamente a tres canales RGB. Durante el entrenamiento se aplicaron transformaciones aleatorias en memoria: inversión horizontal con probabilidad de 0.5, inversión vertical con probabilidad de 0.5, rotaciones de hasta $90°$ y variaciones moderadas de brillo, contraste, saturación y tonalidad mediante `ColorJitter`. Estas operaciones aumentan la diversidad visual de las muestras y reducen la dependencia del clasificador respecto de orientaciones o condiciones radiométricas específicas @adedejiImageAugmentationSatellite2022.
+
+Las imágenes de validación y prueba no recibieron transformaciones aleatorias, debido a que su evaluación debe permanecer determinista. En las tres particiones, los valores de los píxeles se convirtieron a tensores y se normalizaron utilizando estadísticas calculadas exclusivamente sobre una muestra de 3,000 chips del conjunto de entrenamiento:
+
+$ mu = (0.0303, 0.0813, 0.0202) $ <eq-dataset-mean>
+
+$ sigma = (0.0831, 0.0541, 0.0382) $ <eq-dataset-std>
+
+Para cada canal $c$, la transformación aplicada fue:
+
+$ x'_c = (x_c - mu_c) / sigma_c $ <eq-normalizacion-dataset>
+
+El cálculo exclusivo sobre entrenamiento evita incorporar información estadística de validación o prueba durante la preparación del modelo.
+
+#v(6pt)
+#text(style: "italic")[
+  3.4.3. Construcción de los DataLoaders
+]
+#v(3pt)
+
+Los manifiestos `manifest_train.csv`, `manifest_val.csv` y `manifest_test.csv` fueron utilizados por la clase `GarimpoDataset` para relacionar cada ruta PNG con su etiqueta entera. Después de cargar y transformar las imágenes, cada muestra fue representada mediante un tensor de dimensiones $3 times 128 times 128$ y una etiqueta de tipo entero largo.
+
+Los datos se procesaron en lotes de 32 imágenes. El conjunto de entrenamiento fue mezclado al comienzo de cada recorrido mediante `shuffle`, mientras que validación y prueba conservaron un orden estable. Los lotes producidos por los `DataLoader` fueron transferidos al dispositivo disponible, priorizando CUDA y utilizando CPU cuando no se encontraba una GPU compatible.
+
+#v(6pt)
+#text(style: "italic")[
+  3.4.4. Entrenamiento comparativo de arquitecturas
+]
+#v(3pt)
+
+Se evaluaron cuatro arquitecturas disponibles mediante la biblioteca `timm`: EfficientNet-B0, ResNet-50, Swin Transformer Tiny y Vision Transformer Tiny. Todas fueron inicializadas con pesos preentrenados en ImageNet y adaptadas para producir dos salidas, correspondientes a `sem_garimpo` y `com_garimpo`. A diferencia de un esquema de extracción fija de características, los parámetros completos de cada arquitectura permanecieron habilitados para ajuste mediante _fine-tuning_.
+
+La función objetivo utilizada fue `CrossEntropyLoss`, adecuada para una clasificación con dos logits de salida. Para una muestra $i$, la pérdida puede expresarse como:
+
+$ L_i = - log ((exp(z_(i,y_i))) / (sum_(j=0)^1 exp(z_(i,j)))) $ <eq-cross-entropy>
+
+donde $z_(i,j)$ representa el logit producido para la clase $j$ y $y_i$ corresponde a la etiqueta real. Los pesos se actualizaron mediante el optimizador Adam @kingmaAdamMethodStochastic2017. Se estableció una tasa de aprendizaje de $10^(-4)$ para ResNet-50 y EfficientNet-B0, y de $3 times 10^(-5)$ para Swin-T y ViT-tiny.
+
+El entrenamiento se configuró con un máximo de 30 épocas y precisión mixta automática cuando se utilizó CUDA. Al finalizar cada época se calcularon la pérdida, Accuracy, macro F1, F1 por clase, Precision y Recall de `com_garimpo` tanto en entrenamiento como en validación.
+
+#v(6pt)
+#text(style: "italic")[
+  3.4.5. Selección del mejor checkpoint
+]
+#v(3pt)
+
+El criterio de selección fue el macro F1 obtenido sobre el conjunto de validación. Cuando un modelo superaba el mejor valor registrado, se guardaba un checkpoint que incluía la arquitectura, la época, los pesos, las métricas de validación, el tamaño de entrada y las constantes de normalización.
+
+Se utilizó parada temprana con una paciencia de siete épocas. Si el macro F1 de validación no mejoraba durante siete épocas consecutivas, el entrenamiento de esa arquitectura finalizaba. Este criterio evita seleccionar automáticamente la última época, debido a que una reducción continua del error de entrenamiento no garantiza una mejor capacidad de generalización.
+
+#v(6pt)
+#text(style: "italic")[
+  3.4.6. Evaluación final e inferencia
+]
+#v(3pt)
+
+Después del entrenamiento, el mejor checkpoint de cada arquitectura fue evaluado una sola vez sobre los 17,312 chips de prueba. Los logits generados se transformaron en probabilidades mediante `softmax`, y la clase `com_garimpo` fue asignada cuando su probabilidad fue mayor o igual que el umbral de 0.5:
+
+$ hat(y) = cases(
+  1 & "si " P("com_garimpo") >= 0.5,
+  0 & "en caso contrario"
+) $ <eq-umbral>
+
+La comparación principal se realizó mediante macro F1, dado que esta métrica concede la misma importancia a las dos clases. También se reportaron Accuracy, F1 por clase, Precision y Recall de `com_garimpo`. Finalmente, los mejores checkpoints de las cuatro arquitecturas fueron evaluados sobre el conjunto de prueba para comparar su capacidad de generalización. ResNet-50 obtuvo el mayor macro F1 en esta evaluación final y fue identificado como la arquitectura con mejor desempeño entre los modelos analizados.
+
+#figure(
+  placement: top,
+  block(
+    width: 100%,
+    breakable: false,
+    inset: 7pt,
+    stroke: 0.5pt + luma(170),
+  )[
+    #set text(size: 7.5pt)
+    #set par(leading: 0.65em)
+
+    #align(center)[
+      *Catálogo `manifesto_chips.csv`*\
+      ↓\
+      Validación espacial y construcción de la rejilla\
+      ↓\
+      Split por bloques $32 times 32$ y buffer de dos chips\
+      ↓\
+      Manifiestos de entrenamiento, validación y prueba\
+      ↓\
+      Aumento de datos y normalización propia\
+      ↓\
+      Entrenamiento de cuatro arquitecturas\
+      ↓\
+      Selección por macro F1 y evaluación en prueba
+    ]
+  ],
+  caption: [
+    Flujo general del pipeline metodológico.
+  ],
+  kind: image,
+  supplement: [Fig.],
 ) <fig-flowchart>
 
-Para salvaguardar la capacidad de generalización en datos satelitales ciegos, el algoritmo incorpora un mecanismo de parada temprana (*Early Stopping*). Este módulo supervisa la evolución de la función de pérdida en el subconjunto de validación al término de cada época convolucional. Si no se registra un descenso en la pérdida por un intervalo continuo de paciencia configurado en 5 épocas, el entrenamiento se interrumpe automáticamente y se restauran los parámetros sinápticos exactos de la época con menor error. El ciclo algorítmico completo de entrenamiento con control de sobreajuste se formaliza en el pseudocódigo de la @fig-pseudocode.
-
 #figure(
-  align(left)[
-  #rect(width: 95%, inset: 10pt, fill: luma(250))[
-    ```python
-    # Pseudocódigo: Entrenamiento con Transfer Learning y Early Stopping
-    modelo_base = Instanciar_ResNet50(pesos='imagenet', incluir_tope=Falso)
-    Congelar_Capas_Base(modelo_base)
-    clasificador = Construir_Tope(modelo_base, neuronas=512, dropout=0.5, salida='sigmoid')
-    clasificador.compilar(optimizador=Adam(lr=1e-4), pérdida=BinaryCrossEntropy())
-    
-    mejor_pérdida_val = Infinito
-    paciencia = 5
-    iteraciones_sin_mejora = 0
-    
-    PARA época EN RANGO(max_épocas):
-        PARA lote_img, lote_lbl EN generador_entrenamiento:
-            img_aumentadas = Data_Augmentation(lote_img, rot=20, flip=Verdadero, zoom=0.15)
-            predicciones = clasificador.forward(img_aumentadas)
-            error_lote = BCE_Loss(predicciones, lote_lbl)
-            gradientes = Retropropagar(error_lote)
-            Actualizar_Pesos(clasificador, gradientes, Adam)
-            
-        pérdida_val = clasificador.evaluar(generador_validación)
-        SI pérdida_val < mejor_pérdida_val:
-            mejor_pérdida_val = pérdida_val
-            Guardar_Pesos_Óptimos(clasificador)
-            iteraciones_sin_mejora = 0
-        SINO:
-            iteraciones_sin_mejora = iteraciones_sin_mejora + 1
-            SI iteraciones_sin_mejora >= paciencia:
-                Detener_Entrenamiento()
-                Restaurar_Pesos_Óptimos(clasificador)
-                ROMPER
-    ```
-  ]
-  ],
-  caption: [Pseudocódigo formal del proceso de entrenamiento algorítmico y optimización paramétrica del modelo.]
-) <fig-pseudocode>
+  placement: none,
 
+  block(
+    width: 100%,
+    inset: 0pt,
+    stroke: 0.6pt + black,
+    radius: 2pt,
+    breakable: false,
+  )[
+
+    // Cabecera del algoritmo
+    #block(
+      width: 100%,
+      inset: (x: 6pt, y: 4pt),
+      fill: luma(235),
+    )[
+      #align(center)[
+        #text(size: 8pt, weight: "bold")[
+          Algoritmo 1. Pipeline experimental `v2_bloques_tuned`
+        ]
+      ]
+    ]
+
+    #line(length: 100%, stroke: 0.6pt + black)
+
+    // Contenido
+    #block(inset: 6pt)[
+      #set text(size: 7.3pt)
+      #set par(leading: 0.55em)
+
+      #text(weight: "bold")[Entrada:] Catálogo de chips y recortes RGB.\
+      #text(weight: "bold")[Salida:] Métricas finales de los cuatro mejores checkpoints.
+
+      #v(4pt)
+
+      #grid(
+        columns: (1.4em, 1fr),
+        column-gutter: 3pt,
+        row-gutter: 2.5pt,
+
+        [1.], [Cargar y validar `manifesto_chips.csv`.],
+
+        [2.], [
+          Agrupar los chips en bloques espaciales de
+          $32 times 32$ celdas.
+        ],
+
+        [3.], [
+          Asignar bloques a entrenamiento, validación y prueba.
+        ],
+
+        [4.], [
+          Aplicar un buffer espacial de dos chips entre particiones.
+        ],
+
+        [5.], [
+          Calcular la media y desviación únicamente con entrenamiento.
+        ],
+
+        [6.], [
+          Crear los DataLoaders con lotes de 32 imágenes.
+        ],
+
+        [7.], [
+          Para cada arquitectura: EfficientNet-B0, ResNet-50,
+          Swin-T y ViT-tiny:
+        ],
+
+        [], [
+          #h(6pt) a) cargar pesos preentrenados de ImageNet;\
+          #h(6pt) b) adaptar la salida a dos clases;\
+          #h(6pt) c) entrenar durante un máximo de 30 épocas;\
+          #h(6pt) d) calcular el macro F1 de validación;\
+          #h(6pt) e) guardar el mejor checkpoint;\
+          #h(6pt) f) detener tras siete épocas sin mejora.
+        ],
+
+        [8.], [
+          Selecciona el mejor checkpoint de cada arquitectura.
+        ],
+
+        [9.], [
+          Comparar el desempeño final de los cuatro checkpoints sobre el conjunto de prueba.
+        ],
+      )
+    ]
+
+    #line(length: 100%, stroke: 0.6pt + black)
+
+    #block(
+      width: 100%,
+      inset: (x: 6pt, y: 3pt),
+    )[
+      #set text(size: 6.8pt)
+      #text(style: "italic")[
+        Configuración: CrossEntropyLoss, optimizador Adam,
+        umbral de decisión 0.5 y parada temprana con paciencia 7.
+      ]
+    ]
+  ],
+
+  caption: [
+    Procedimiento de entrenamiento, validación y selección del modelo.
+  ],
+
+  kind: raw,
+  supplement: [Algoritmo],
+) <alg-pipeline>
 // ============================================================
 // SECCIÓN 4: RESULTADOS
 // ============================================================
