@@ -1,5 +1,5 @@
 #import "@preview/charged-ieee:0.1.4": ieee
-
+#set page(numbering: "1")
 #show: ieee.with(
   title: [Clasificación Binaria de Minería Ilegal (Garimpo) en la Amazonía mediante Transfer Learning con ResNet50 sobre Imágenes Satelitales],
   abstract: [
@@ -45,8 +45,6 @@
   index-terms: ("Aprendizaje por transferencia", "Garimpo aluvial", "Imágenes satelitales", "Redes neuronales convolucionales", "ResNet50"),
   bibliography: bibliography("sources/references.bib"),
 )
-
-#set page(numbering: "1")
 
 #place(bottom + left, clearance: 0pt, float: true)[
   #line(length: 100%, stroke: 0.5pt)
