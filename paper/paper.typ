@@ -61,7 +61,7 @@
 #show "Fig.": "Figura"
 #show figure.where(kind: table): set figure.caption(position: top)
 
-= 1. Introducción
+= 1. INTRODUCCIÓN
 
 Las actividades extractivas ilegales constituyen una de las principales causas de deterioro ambiental en la actualidad @crespo-lopezMercuryAmazonDanger2023. Entre ellas, la minería a cielo abierto destaca por sus efectos directos sobre el territorio, ya que elimina la cobertura vegetal, destruye hábitats y libera contaminantes que terminan en ríos y quebradas cercanas @balaniukMiningTailingsDam2020. Esta eliminación no afecta únicamente a los ecosistemas, sino también a la salud y a las actividades económicas de las comunidades que dependen de esos recursos hídricos.
 
@@ -79,9 +79,9 @@ El análisis satelital tradicional tampoco elimina completamente esta dificultad
 
 La Visión Computacional ofrece una alternativa para automatizar este proceso @LandUseLand2023. Las Redes Neuronales Convolucionales pueden analizar grandes cantidades de imágenes multiespectrales y aprender diferencias de textura, forma y reflectancia directamente a partir de los píxeles. De esta manera, reducen la necesidad de que una persona inspeccione cada imagen una por una. El aprendizaje por transferencia también permite aprovechar modelos previamente entrenados y adaptarlos a escenarios amazónicos, incluso cuando determinadas zonas no han sido cartografiadas con anterioridad.
 
-Entre las arquitecturas disponibles, ResNet50 resulta adecuada por el uso de conexiones residuales, las cuales facilitan el entrenamiento de redes profundas y reducen los problemas asociados con la pérdida del gradiente, esta arquitectura puede apoyar la revisión automática de imágenes de la Amazonía con una frecuencia diaria o semanal, utilizando recursos de procesamiento gráfico. Esto permitiría reducir la carga de trabajo manual y contribuir al desarrollo de sistemas de alerta temprana para orientar acciones de control.
+Para resolver este problema técnico, es necesario evaluar diferentes modelos de clasificación. Las redes convolucionales como EfficientNet-B0 y ResNet50 tienen una gran capacidad para detectar patrones irregulares en el terreno. Por su parte, las arquitecturas modernas como Swin Transformer y Vision Transformer analizan las fotografías satelitales de forma global. Comparar estas cuatro opciones bajo las mismas condiciones experimentales permite determinar cuál funciona mejor sobre la selva amazónica.
 
-En este contexto, la investigación tiene como objetivo construir y evaluar un modelo de Deep Learning capaz de clasificar automáticamente la presencia o ausencia de minería aluvial ilegal en la Amazonía. Para ello, se utiliza aprendizaje por transferencia con ResNet50 sobre imágenes satelitales del conjunto Amazonia Garimpo Binario @grupioniDeteccaoGarimpoNa2026. La Sección 2 presenta los estudios relacionados con la teledetección de minería artesanal. La Sección 3 describe los fundamentos y el procedimiento metodológico. La Sección 4 expone los resultados obtenidos, mientras que las Secciones 5 a 8 desarrollan la discusión, las conclusiones, las propuestas de trabajo futuro y las consideraciones éticas de la investigación.
+El objetivo central de esta investigación es construir un sistema automatizado para clasificar la minería aluvial ilegal en el conjunto de datos Amazonia Garimpo Binario @grupioniDeteccaoGarimpoNa2026. El diseño experimental contrasta el desempeño de cuatro arquitecturas neuronales preentrenadas para seleccionar la herramienta más precisa. Tras evaluar los resultados empíricos, el estudio adopta la red ResNet50 como el modelo definitivo para la producción. El resto del artículo detalla los trabajos relacionados en la Sección 2 y la metodología exacta en la Sección 3. Posteriormente, las Secciones 4 a 8 exponen los resultados numéricos, la discusión, las conclusiones y las implicancias prácticas de la herramienta desarrollada.
 
 // ============================================================
 // SECCIÓN 2: TRABAJOS RELACIONADOS
