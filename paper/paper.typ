@@ -61,7 +61,7 @@
 #show "Fig.": "Figura"
 #show figure.where(kind: table): set figure.caption(position: top)
 
-= 1. INTRODUCCIÓN
+= 1. Introducción
 
 Las actividades extractivas ilegales constituyen una de las principales causas de deterioro ambiental en la actualidad @crespo-lopezMercuryAmazonDanger2023. Entre ellas, la minería a cielo abierto destaca por sus efectos directos sobre el territorio, ya que elimina la cobertura vegetal, destruye hábitats y libera contaminantes que terminan en ríos y quebradas cercanas @balaniukMiningTailingsDam2020. Esta eliminación no afecta únicamente a los ecosistemas, sino también a la salud y a las actividades económicas de las comunidades que dependen de esos recursos hídricos. La urgencia por detener este daño exige una intervención tecnológica inmediata.
 
@@ -87,7 +87,7 @@ El objetivo central de esta investigación es construir un sistema automatizado 
 // SECCIÓN 2: TRABAJOS RELACIONADOS
 // ============================================================
 
-= 2. TRABAJOS RELACIONADOS
+= 2. Trabajos relacionados
 
 La supervisión de la extracción ilegal de minerales en amplias áreas de bosques tropicales presenta desafíos significativos debido a la ausencia de mapas organizados y los altos costos logísticos asociados con la cartografía del terreno. Para abordar esta poca supervisión en el seguimiento geográfico, Lobo et al. @loboMappingMiningAreas2018 establecieron como meta encontrar las zonas de extracción de oro utilizando datos multiespectrales que son accesibles públicamente. En su método de análisis utilizó el algoritmo Random Forest, aplicándolo a los componentes principales obtenidos de las imágenes satelitales de Sentinel-2. Un elemento fundamental del estudio fue validar la efectividad de la teledetección multiespectral de resolución moderada como un método habitual para examinar áreas en el Amazonas. En las evaluaciones llevadas a cabo, el sistema tiene un índice Kappa de 0.93, lo que nos dice que tiene un alto nivel de coincidencia estadística para distinguir la cobertura alterada. Sin embargo, el clasificador es muy susceptible al ruido atmosférico causado por la densa nubosidad, lo que genera un número significativo de falsos positivos en la temporada de lluvias.
 
@@ -160,7 +160,7 @@ El monitoreo satelital de minería ilegal evolucionó desde los clasificadores e
 // SECCIÓN 3: MATERIALES Y MÉTODOS
 // ============================================================
 
-= 3. MATERIALES Y MÉTODOS
+= 3. Materiales y métodos
 
 == _3.1. Fundamentos Teóricos_
 
@@ -333,7 +333,7 @@ Para salvaguardar la capacidad de generalización en datos satelitales ciegos, e
 // SECCIÓN 4: RESULTADOS
 // ============================================================
 
-= 4. RESULTADOS
+= 4. Resultados
 
 Esta sección evalúa el rendimiento de las cuatro arquitecturas (ResNet-50, EfficientNet-B0, Swin-T y ViT-tiny) sobre el conjunto de prueba de la corrida v2_bloques_tuned: 17,312 chips (50.2% com_garimpo), evaluados con umbral de decisión 0.5. A diferencia de la corrida inicial, el split train/val/test aquí no se hizo por chip individual ni por ráster completo, sino por bloques espaciales de 32×32 celdas con un buffer de 2 chips en las costuras entre bloques de distinto split, para evitar que la cercanía geográfica entre chips vecinos infle las métricas (ver Sección 3.3 para el detalle metodológico del split). Además, los cuatro modelos se entrenaron con normalización propia del dataset (calculada sobre los valores reales de intensidad de los chips amazónicos) en lugar de la normalización estándar de ImageNet.
 
@@ -442,7 +442,7 @@ No se repitió, sobre este split, la revisión manual con muestra aleatoria de f
 // SECCIÓN 5: DISCUSIÓN
 // ============================================================
 
-= 5. DISCUSIÓN
+= 5. Discusión
 
 == 5.1 Interpretación de Resultados
 
@@ -476,9 +476,6 @@ La comparación más importante de toda esta tabla es la última fila, contra el
 
 El split por bloques que usamos aquí (bloques completos de 32×32 celdas repartidos entre train/val/test, con un buffer de descarte en las costuras) elimina esa fuga de información. El resultado es un número más bajo, pero también más honesto: es la estimación más cercana a lo que se puede esperar si este modelo se despliega sobre un tramo de selva que el modelo jamás vio durante el entrenamiento, que es exactamente el escenario de uso real de un sistema de alerta temprana.
 
-== 5.3 Limitaciones del Modelo
-
-El modelo conserva limitaciones que conviene tener en cuenta antes de pensar en un despliegue operativo. La primera es la confusión espectral con formaciones naturales similares a las cicatrices del garimpo, descrita en la Sección 4.3; aunque no se re-auditó específicamente sobre este split, no hay razón para pensar que el fenómeno haya desaparecido, dado que sigue habiendo 1,683 falsos positivos y 1,886 falsos negativos en test. La segunda es la dependencia exclusiva de imágenes ópticas, que deja al sistema ciego durante la temporada de nubes densas; resolver esto probablemente requiera integrar datos de radar SAR, como se discute en @lemesnetoSARBasedMonitoringIllegal2026. La tercera es que, incluso con un presupuesto de hasta 30 épocas y una paciencia de 7 para el Early Stopping, ResNet-50 volvió a converger temprano (en la época 9, igual que en la corrida anterior), lo que sugiere que el techo de esta arquitectura sobre este dataset ronda el 79-80% de accuracy en test bajo el split actual, y que ganancias adicionales probablemente vendrán más de mejoras en los datos (fusión con SAR, más rásteres de entrenamiento) que de entrenar por más tiempo.
 
 
 
@@ -486,13 +483,15 @@ El modelo conserva limitaciones que conviene tener en cuenta antes de pensar en 
 // SECCIONES FINALES
 // ============================================================
 
-= 6. CONCLUSIONES
+= 6. Conclusiones
 
 El presente estudio establece que el Transfer Learning con la arquitectura ResNet50 preentrenada en ImageNet constituye una estrategia válida y reproducible para la detección binaria automatizada de minería ilegal (*garimpo*) en la Amazonía. Evaluado sobre el conjunto de prueba de 17,312 imágenes, el modelo ResNet-50 alcanzó una exactitud global del 79.38%, un F1-Score Macro del 79.38% y un Recall del 78.29% para la clase de garimpo activo. Estos resultados confirman que las características espectro-espaciales aprendidas mediante Transfer Learning superan la capacidad de monitoreo manual tradicional, que resulta físicamente imposible a la escala de la cuenca amazónica. El Recall obtenido supera en 36.29 puntos porcentuales el mejor resultado comparable de la literatura en detección de minería artesanal con segmentación CNN pura.
 
 La evaluación comparativa entre las cuatro arquitecturas evaluadas (ResNet-50, EfficientNet-B0, Swin Transformer y ViT-Tiny) revela que ResNet-50 alcanza el mayor F1 Macro global. El experimento de preentrenamiento vs. entrenamiento desde cero confirma que el Transfer Learning desde ImageNet es indispensable, especialmente para el Swin Transformer, cuyo F1 colapsa de 0.7456 a 0.3118 sin pesos iniciales. Estos hallazgos validan el uso de ResNet-50 con Transfer Learning como línea base metodológica para futuros sistemas de alertas tempranas de deforestación por actividades extractivas a escala regional.
 
-= 7. TRABAJOS FUTUROS
+= 7. Limitaciones y trabajos futuros
+
+El modelo conserva limitaciones que conviene tener en cuenta antes de pensar en un despliegue operativo. La primera es la confusión espectral con formaciones naturales similares a las cicatrices del garimpo, descrita en la Sección 4.3; aunque no se re-auditó específicamente sobre este split, no hay razón para pensar que el fenómeno haya desaparecido, dado que sigue habiendo 1,683 falsos positivos y 1,886 falsos negativos en test. La segunda es la dependencia exclusiva de imágenes ópticas, que deja al sistema ciego durante la temporada de nubes densas; resolver esto probablemente requiera integrar datos de radar SAR, como se discute en @lemesnetoSARBasedMonitoringIllegal2026. La tercera es que, incluso con un presupuesto de hasta 30 épocas y una paciencia de 7 para el Early Stopping, ResNet-50 volvió a converger temprano (en la época 9, igual que en la corrida anterior), lo que sugiere que el techo de esta arquitectura sobre este dataset ronda el 79-80% de accuracy en test bajo el split actual, y que ganancias adicionales probablemente vendrán más de mejoras en los datos (fusión con SAR, más rásteres de entrenamiento) que de entrenar por más tiempo.
 
 Para mejorar la capacidad predictiva del sistema, el siguiente paso lógico es extender el entrenamiento de la red ResNet-50. En nuestro experimento limitamos las iteraciones por restricciones computacionales, pero aumentar el ciclo a un rango de 50 a 100 épocas debería estabilizar la curva de aprendizaje. Este aumento requerirá calibrar cuidadosamente la tasa de aprendizaje mediante una búsqueda en cuadrícula, lo que evitará que el modelo memorice los datos en las etapas finales. Como demostró Grupioni et al. @grupioniDeteccaoGarimpoNa2026, aplicar un ajuste fino prolongado sobre este conjunto masivo de imágenes suele elevar considerablemente la exactitud general, acercando el modelo a los estándares necesarios para su despliegue en producción.
 
@@ -629,14 +628,29 @@ $ (partial L) / (partial W_{m,n}) = sum_i sum_j delta_{i,j} X_{i+m, j+n} $
 
 Donde $delta_{i,j}$ denota el término de error retro-propagado desde las capas superiores. Esta formulación matricial es la que el optimizador Adam emplea en cada época para ajustar adaptativamente el vector hiperdimensional de parámetros, permitiendo que la arquitectura asimile progresivamente las formas serpentinas de los ríos y las pozas de deforestación provocadas por la actividad minera.
 
-= 8. Declaraciones Éticas y Administrativas
+*CRediT authorship contribution statement*
+J. Ajra, L. Luque, P. Cari, F. Garambel y A. Quispe contribuyeron equitativamente en la conceptualización, software, validación y análisis de este trabajo.
 
-*Contribución de Autoría (CRediT):* J. Ajra, L. Luque, P. Cari, F. Garambel y A. Quispe contribuyeron equitativamente en la conceptualización, software, validación y análisis de este trabajo.
+*Declaration of competing interest*
+Los autores declaran explícitamente que no existe ningún conflicto de intereses financiero, personal o institucional que pudiera haber influido en los resultados o la interpretación de este estudio.
 
-*Conflicto de Intereses:* Los autores declaran explícitamente que no existe ningún conflicto de intereses financiero, personal o institucional que pudiera haber influido en los resultados o la interpretación de este estudio.
+*Ethical statement*
+Este estudio no involucró experimentos con humanos ni animales, por lo que no se requirió aprobación de un comité de ética institucional.
 
-*Conducta Ética:* Este trabajo fue desarrollado bajo estrictos principios de integridad académica, rigurosidad metodológica y transparencia en el procesamiento de datos científicos.
+*Consent to participate*
+No aplica.
 
-*Disponibilidad de Datos y Código:* El conjunto de datos Amazonia Garimpo Binario es de acceso público en Kaggle y los guiones de código fuente están disponibles en el repositorio oficial del proyecto en GitHub.
+*Consent for publication*
+No aplica.
 
-*Financiamiento:* La presente investigación no recibió subvenciones ni financiamiento específico de agencias del sector público, comercial o entidades sin fines de lucro.
+*Funding*
+No aplica (este estudio no recibió financiamiento externo de agencias públicas o privadas).
+
+*Acknowledgement*
+No aplica.
+
+*Code availability*
+Los scripts de análisis y el código fuente completo del ciclo de entrenamiento están disponibles públicamente en el repositorio oficial del proyecto en GitHub.
+
+*Data availability*
+El conjunto de datos "Amazonia Garimpo Binario" que da soporte a los hallazgos de este estudio es de acceso público y está alojado en la plataforma Kaggle.
