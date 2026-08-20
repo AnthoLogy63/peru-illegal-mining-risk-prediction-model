@@ -186,33 +186,7 @@ Las Redes Neuronales Convolucionales (CNN) son la principal arquitectura utiliza
 
 El entrenamiento paramétrico de arquitecturas convolucionales profundas desde cero exige millones de imágenes satelitales etiquetadas y recursos computacionales inasumibles para las entidades gubernamentales locales @yosinskiHowTransferableAre2014. Para superar esta limitación estructural y acelerar la convergencia, la presente investigación aplica la técnica de Transferencia de Aprendizaje (*Transfer Learning*) @naushadDeepTransferLearning2021. El clasificador inicializa sus parámetros sinápticos con los pesos óptimos preentrenados sobre el repositorio masivo ImageNet, compuesto por más de un millón de imágenes visuales heterogéneas @tianRemoteSensingRetrieval2023a. El sistema solo ejecuta un reentrenamiento (*fine-tuning*) sobre las capas superiores densamente conectadas, ahorrando significativamente tiempo de GPU y costos algebraicos sin sacrificar capacidad discriminativa @tanEfficientNetRethinkingModel2020.
 
-La arquitectura ResNet-50 actúa como el motor principal de extracción de características visuales gracias a su innovación en el diseño de topologías profundas @heDeepResidualLearning2015. Al incrementar la profundidad convolucional para capturar texturas abstractas, las redes secuenciales convencionales experimentan el fenómeno degenerativo de desvanecimiento del gradiente durante la retropropagación. ResNet-50 supera este obstáculo analítico incorporando bloques residuales provistos de conexiones de salto (*skip connections*) que desvían la identidad de entrada alrededor de los estratos convolucionales, obedeciendo la formulación $y = cal(F)(x, {W_i}) + x$. Esta topología asegura un flujo ininterrumpido de gradientes matemáticos hacia las primeras capas, permitiendo entrenar con máxima estabilidad 50 capas ocultas parametrizadas @farahnakianMachineLearningAlgorithms2024. La @tabla-resnet sintetiza la estructura jerárquica de la red ResNet-50 utilizada en la experimentación.
-
-
-#figure(
-  block[
-    #set text(size: 8pt)
-    #table(
-      columns: (1.2fr, 1.4fr, 0.8fr, 0.8fr),
-      align: (col, row) => left,
-      inset: 4pt,
-      stroke: none,
-      table.hline(stroke: 0.8pt + black),
-      table.header([*Etapa*], [*Operación convolucional*], [*Filtros*], [*Bloques*]),
-      table.hline(stroke: 0.5pt + black),
-      [*Conv1*], [$7 times 7$, stride 2], [64], [1],
-      [*Max Pool*], [$3 times 3$, stride 2], [-], [1],
-      [*Conv2_x*], [[$1 times 1, 64$ \ $3 times 3, 64$ \ $1 times 1, 256$]], [256], [3],
-      [*Conv3_x*], [[$1 times 1, 128$ \ $3 times 3, 128$ \ $1 times 1, 512$]], [512], [4],
-      [*Conv4_x*], [[$1 times 1, 256$ \ $3 times 3, 256$ \ $1 times 1, 1024$]], [1024], [6],
-      [*Conv5_x*], [[$1 times 1, 512$ \ $3 times 3, 512$ \ $1 times 1, 2048$]], [2048], [3],
-      [*Clasificación*], [Global Average Pooling \ Fully Connected], [1], [1],
-      table.hline(stroke: 0.8pt + black)
-    )
-  ],
-  caption: [#smallcaps[Desglose estructural y topológico de la arquitectura convolucional ResNet-50 preentrenada.]],
-  kind: table,
-) <tabla-resnet>
+La arquitectura ResNet-50 actúa como el motor principal de extracción de características visuales gracias a su innovación en el diseño de topologías profundas @heDeepResidualLearning2015. Al incrementar la profundidad convolucional para capturar texturas abstractas, las redes secuenciales convencionales experimentan el fenómeno degenerativo de desvanecimiento del gradiente durante la retropropagación. ResNet-50 supera este obstáculo analítico incorporando bloques residuales provistos de conexiones de salto (*skip connections*) que desvían la identidad de entrada alrededor de los estratos convolucionales, obedeciendo la formulación $y = cal(F)(x, {W_i}) + x$. Esta topología asegura un flujo ininterrumpido de gradientes matemáticos hacia las primeras capas, permitiendo entrenar con máxima estabilidad 50 capas ocultas parametrizadas @farahnakianMachineLearningAlgorithms2024. El desglose estructural de esta arquitectura inicia con una etapa convolucional (Conv1) equipada con 64 filtros de $7 times 7$ y un stride de 2, seguida de una reducción mediante Max Pooling de $3 times 3$. Posteriormente, la red apila cuatro grupos principales de bloques residuales: Conv2\_x con 3 bloques y 256 filtros; Conv3\_x con 4 bloques y 512 filtros; Conv4\_x, la etapa más profunda, con 6 bloques y 1024 filtros; y finalmente Conv5\_x con 3 bloques y 2048 filtros. El proceso concluye con una etapa de clasificación compuesta por un Global Average Pooling y una capa completamente conectada (Fully Connected).
 
 Para establecer una línea base puramente secuencial y evaluar cuantitativamente el impacto de las conexiones residuales, el estudio implementa como modelo de comparación la arquitectura clásica VGG16 @cotolanApplicabilityPretrainedCNNs2024. VGG16 estructura sus representaciones internas utilizando exclusivamente filtros convolucionales pequeños de $3 times 3$ organizados en bloques secuenciales continuos @heDeepLearningForest2023. Su diseño carece de mecanismos de salto de identidad, lo que ilustra con claridad la degradación y pérdida de capacidad discriminativa cuando los gradientes se atenúan en topologías profundas. La contrastación empírica entre VGG16 y ResNet-50 justifica formalmente la superioridad del aprendizaje residual para la identificación de patrones multiespectrales en hábitats aluviales amazónicos @shahComparingInceptionV32023.
 
